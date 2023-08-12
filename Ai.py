@@ -129,6 +129,7 @@ class Ai:
     def __mutateWeights(self, weights: list):
 
         for i in range(len(weights)):
+#make a for loop for each set of weights input, hidden, output
 
             determiningNum = random.randint(-100, 100)
 
@@ -143,6 +144,7 @@ class Ai:
 
     def meiosis(self, mom: list, dad: list):
 
+#same as mutating weights, make the ai inherit individual weights instead of lists of weights
         for i in range(self.weights):
 
             if(random.randint(1, 100) > 50):
