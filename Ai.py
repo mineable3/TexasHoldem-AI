@@ -1,3 +1,4 @@
+import logging
 from Constants import Constants
 import random
 import math
@@ -21,7 +22,7 @@ class Ai:
         for i in range(self.numOfInputs):
             weight = []
             for s in range(self.sizeOfHiddenLayers):
-                weight.append(random.randrange(-1, 1, 0.001))
+                weight.append(round(random.random(), 3))
 
             self.inputWeights.append(weight)
         #endregion
@@ -35,7 +36,7 @@ class Ai:
                 weight = []
 
                 for d in range(self.sizeOfHiddenLayers):
-                    weight.append(random.randrange(-1, 1, 0.001))
+                    weight.append(round(random.random(), 3))
 
                 columnWeights.append(weight)
 
@@ -47,7 +48,7 @@ class Ai:
             weights = []
 
             for p in range(self.sizeOfHiddenLayers):
-                weights.append(random.randrange(-1, 1, 0.001))
+                weight.append(round(random.random(), 3))
 
             self.outputWeights.append(weights)
 
@@ -59,8 +60,8 @@ class Ai:
         self.weights.append(self.outputWeights)
 
 
-    def __gelu(x):
-        return 0.5 * x * (1 + math.erf(x/math.sqrt(2)))
+    def gelu(self, value) -> float:
+        return 0.5 * value * (1 + math.erf(value/math.sqrt(2)))
 
     #returns a list holding the values of the first hidden layer
     def __inputToFirstHiddenLayer(self, inputs: list):
@@ -68,13 +69,13 @@ class Ai:
         hiddenNeurons = list()
 
         for o in range(self.sizeOfHiddenLayers):
-            nueronValue = 0
+            nueronValue = int(0)
 
             for i in range(self.numOfInputs):
                 holder = inputs[i] * self.inputWeights[o][i]
                 nueronValue += holder
 
-            nueronValue = self.__gelu(nueronValue)
+            nueronValue = self.gelu(nueronValue)
             hiddenNeurons.append(nueronValue)
 
         return hiddenNeurons

@@ -1,3 +1,4 @@
+import logging
 from Player import Player
 from Card import Card
 from Constants import Constants
@@ -31,7 +32,6 @@ pot = 0
 
 isFirstBettingRound = True
 
-board = list() #the flop, turn, and river
 
 dealerIndex = -1
 bigBlindIndex = -2
@@ -39,6 +39,13 @@ smallBlindIndex = -3
 players = list([bob, jeff, jim, sally, joe, house])
 
 #region                Making the deck
+
+holderOne = Card(-1, -1)
+holderTwo = Card(-1, -1)
+holderThree = Card(-1, -1)
+holderFour = Card(-1, -1)
+holderFive = Card(-1, -1)
+
 aceS = Card(1, 1, 14)
 twoS = Card(1, 2)
 threS= Card(1, 3)
@@ -99,6 +106,9 @@ kingD = Card(4, 13)
 deck = [aceS, twoS, threS, fourS, fiveS, sixS, sevenS, eightS, nineS, tenS, jackS, queenS, kingS, aceH, twoH, threH, fourH, fiveH, sixH, sevenH, eightH, nineH, tenH, jackH, queenH, kingH, aceC, twoC, threC, fourC, fiveC, sixC, sevenC, eightC, nineC, tenC, jackC, queenC, kingC, aceD, twoD, threD, fourD, fiveD, sixD, sevenD, eightD, nineD, tenD, jackD, queenD, kingD]
 
 #endregion
+
+board = list((holderOne, holderTwo, holderThree, holderFour, holderFive)) #the flop, turn, and river
+
 
 def betMoney(player, amount):
     global pot
@@ -271,7 +281,7 @@ def clearPlayersHands():
 
 def clearTheBoard():
     global board
-    board = list()
+    board = list((holderOne, holderTwo, holderThree, holderFour, holderFive))
 
 def setup():
     makeEveryonePlaying()
@@ -294,7 +304,9 @@ def getInputs(player: Player):
     inputs.append(pot)
     inputs.append(getMostMoneyOnTable())
     inputs.append(player.getMoneyOnTable())
-    inputs.append(player.getMoney())
+    inputs.append(player.getMoney())#value 11
+
+    return inputs
 
 def improveAi():
 
@@ -318,6 +330,7 @@ def improveAi():
 
 test()
 
+logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
 #game loop
 for i in range(10):
