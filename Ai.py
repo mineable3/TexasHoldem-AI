@@ -128,35 +128,73 @@ class Ai:
 
     def __mutateWeights(self, weights: list):
 
-        for i in range(len(weights)):
-#make a for loop for each set of weights input, hidden, output
-
+        #input layer
+        for i in range(len(weights[0])):
             determiningNum = random.randint(-100, 100)
 
             if(determiningNum > 95):
                 #slightly bigger weight
-                weights[i] = weights[i] * (1 + Constants.mutator)
+                weights[0][i] = weights[0][i] * (1 + Constants.mutator)
             elif(determiningNum < -95):
                 #slightly smaller weight
-                weights[i] = weights[i] * (1 - Constants.mutator)
+                weights[0][i] = weights[0][i] * (1 - Constants.mutator)
+
+        #hidden layers
+        for i in range(len(weights[1])):
+            for o in range(len(weights[1][i])):
+                determiningNum = random.randint(-100, 100)
+
+                if(determiningNum > 95):
+                    #slightly bigger weight
+                    weights[1][i][o] = weights[1][i][o] * (1 + Constants.mutator)
+                elif(determiningNum < -95):
+                    #slightly smaller weight
+                    weights[1][i][o] = weights[1][i][o] * (1 - Constants.mutator)
+
+        #output layer
+        for i in range(len(weights[2])):
+            determiningNum = random.randint(-100, 100)
+
+            if(determiningNum > 95):
+                #slightly bigger weight
+                weights[2][i] = weights[2][i] * (1 + Constants.mutator)
+            elif(determiningNum < -95):
+                #slightly smaller weight
+                weights[2][i] = weights[2][i] * (1 - Constants.mutator)
+
 
         return weights
 
     def meiosis(self, mom: list, dad: list):
 
-#same as mutating weights, make the ai inherit individual weights instead of lists of weights
-        for i in range(self.weights):
+        #input layer
+        for i in range(len(self.weights[0])):
 
             if(random.randint(1, 100) > 50):
-                self.weights[i] = mom[i]
+                self.weights[0][i] = mom[0][i]
             else:
-                self.weights[i] = dad[i]
+                self.weights[0][i] = dad[0][i]
+
+        #hidden layers
+        for i in range(len(self.weights[1])):
+            for o in range(len(self.weights[1][i])):
+
+                if(random.randint(1, 100) > 50):
+                    self.weights[1][i][o] = mom[1][i][o]
+                else:
+                    self.weights[1][i][o] = dad[1][i][o]
+
+        #output layer
+        for i in range(len(self.weights[2])):
+
+            if(random.randint(1, 100) > 50):
+                self.weights[2][i] = mom[2][i]
+            else:
+                self.weights[2][i] = dad[2][i]
 
         self.weights = self.__mutateWeights(self.weights)
 
         return self.weights
 
-
-
-
-
+    def getWeights(self):
+        return self.weights

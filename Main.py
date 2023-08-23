@@ -11,23 +11,25 @@ def test():
 
     pass
 
+roboBob = Ai(11, 1, 3, 11)
+roboJeff = Ai(11, 1, 3, 11)
+roboJim = Ai(11, 1, 3, 11)
+roboSally = Ai(11, 1, 3, 11)
+roboJoe = Ai(11, 1, 3, 11)
+roboHouse = Ai(11, 1, 3, 11)
+
+bob = Player("bob", Constants.startingCash, 0, roboBob)
+jeff = Player("jeff", Constants.startingCash, 1, roboJeff)
+jim = Player("jim", Constants.startingCash, 2, roboJim)
+sally = Player("sally", Constants.startingCash, 3, roboSally)
+joe = Player("joe", Constants.startingCash, 4, roboJoe)
+house = Player("house", Constants.startingCash, 5, roboHouse)
 
 
-bob = Player("bob", Constants.startingCash, 0)
-jeff = Player("jeff", Constants.startingCash, 1)
-jim = Player("jim", Constants.startingCash, 2)
-sally = Player("sally", Constants.startingCash, 3)
-joe = Player("joe", Constants.startingCash, 4)
-house = Player("house", Constants.startingCash, 5)
-
-roboBob = Ai(22, 1, 2, 11)
-roboJeff = Ai(22, 1, 2, 11)
-roboJim = Ai(22, 1, 2, 11)
-roboSally = Ai(22, 1, 2, 11)
-roboJoe = Ai(22, 1, 2, 11)
-roboHouse = Ai(22, 1, 2, 11)
 
 pot = 0
+
+isFirstBettingRound = True
 
 board = list() #the flop, turn, and river
 
@@ -111,15 +113,19 @@ def betMoney(player, amount):
 def allIn(player):
     betMoney(player, player.getMoney())
 
-def shuffleDeck():
+def shuffleAndResetDeck():
+    deck = [aceS, twoS, threS, fourS, fiveS, sixS, sevenS, eightS, nineS, tenS, jackS, queenS, kingS, aceH, twoH, threH, fourH, fiveH, sixH, sevenH, eightH, nineH, tenH, jackH, queenH, kingH, aceC, twoC, threC, fourC, fiveC, sixC, sevenC, eightC, nineC, tenC, jackC, queenC, kingC, aceD, twoD, threD, fourD, fiveD, sixD, sevenD, eightD, nineD, tenD, jackD, queenD, kingD]
     random.shuffle(deck)
 
 def flop():
     for i in range(3):
         board.append(deck.pop(0))
 
+    print(f"The community card are {board}")
+
 def turnOrRiver():
     board.append(deck.pop(0))
+    print(f"The community card are {board}")
 
 def dealPocketCards():
     for i in range(len(players)):
@@ -128,7 +134,7 @@ def dealPocketCards():
     for i in range(len(players)):
         players[i].addPocketCard(deck.pop(0))
 
-def chooseDealer():
+def randomlyChooseDealer():
     global dealerIndex, bigBlindIndex, smallBlindIndex
     dealerIndex = random.randint(0, 5)
 
@@ -167,10 +173,114 @@ def anteAndBlinds():
     betMoney(players[bigBlindIndex], Constants.bigBlind - Constants.ante)
     betMoney(players[smallBlindIndex], (Constants.bigBlind / 2) - Constants.ante)
 
+def roundOfBetting():
+    global dealerIndex
+    global isFirstBettingRound
+
+    playing = True
+    resetWhoHasCalled()
+
+    currentBetterIndex = dealerIndex
+
+    if (isFirstBettingRound):
+        currentBetterIndex -= 2
+        isFirstBettingRound = False
+
+
+
+    while playing:
+        #region                        advancing the better index and looping it around
+        currentBetterIndex -= 1
+
+        if(currentBetterIndex < 0):
+            currentBetterIndex = 5
+        #endregion
+
+        amountToBet = players[currentBetterIndex].getAi().inputToOutput(getInputs(players[currentBetterIndex]))
+        newMoneyOnTable = players[currentBetterIndex].getMoneyOnTable() + amountToBet
+
+        if(newMoneyOnTable < getMostMoneyOnTable()):
+            players[currentBetterIndex].setIsPlaying(False)
+            print(f"{players[currentBetterIndex].getName()} has folded")
+
+
+
+
+        elif(players[currentBetterIndex].isPlaying()):
+            if(newMoneyOnTable == getMostMoneyOnTable()):
+                players[currentBetterIndex].setHasCalled(True)
+
+            betMoney(players[currentBetterIndex], amountToBet)
+            print(f"{players[currentBetterIndex].getName()} has bet ${amountToBet}")
+
+        if(bettingIsOver()):
+            playing = False
+
+    print("This round of betting is over!")
+
+def makeEveryonePlaying():
+    for player in players:
+        player.setIsPlaying(True)
+
+def resetWhoHasCalled():
+    for player in players:
+        player.setHasCalled(False)
+
+def bettingIsOver():
+
+    #finding all the players currently betting
+    currentBetters = list()
+    for player in players:
+        if(player.isPlaying()):
+            currentBetters.append(player)
+
+
+    numOfPlayersThatCalled = 0
+    for player in currentBetters:
+        if(player.hasCalled()):
+            numOfPlayersThatCalled += 1
+    
+    if(len(currentBetters) == numOfPlayersThatCalled):
+        return True
+    else:
+        return False
+
+def getMostMoneyOnTable():
+
+    mostAmountOfMoneyFromAPlayer = 0
+
+    for player in players:
+        if(player.getMoneyOnTable() > mostAmountOfMoneyFromAPlayer):
+            mostAmountOfMoneyFromAPlayer = player.getMoneyOnTable()
+
+    return mostAmountOfMoneyFromAPlayer
+
+def getSecondMostMoneyOnTable():
+
+    mostAmountOfMoneyFromAPlayer = 0
+
+    for player in players:
+        if((player.getMoneyOnTable() > mostAmountOfMoneyFromAPlayer) and (player.getMoneyOnTable() != getMostMoneyOnTable())):
+            mostAmountOfMoneyFromAPlayer = player.getMoneyOnTable()
+
+    return mostAmountOfMoneyFromAPlayer
+
+def clearPlayersHands():
+    for player in players:
+        player.clearPocket()
+
+def clearTheBoard():
+    global board
+    board = list()
+
 def setup():
-    shuffleDeck()
-    chooseDealer()
+    makeEveryonePlaying()
+    clearTheBoard()
+    clearPlayersHands()
+    shuffleAndResetDeck()
+    randomlyChooseDealer()
     dealPocketCards()
+    anteAndBlinds()
 
 def getInputs(player: Player):
     inputs = []
@@ -182,30 +292,40 @@ def getInputs(player: Player):
     inputs.append(board[3].getValue())
     inputs.append(board[4].getValue())
     inputs.append(pot)
-    #inputs.append(minimumBetToKeepPlaying)
-    #inputs.append(playersStilBetting)
-    inputs.append(players[0].getMoneyOnTable())
-    inputs.append(players[1].getMoneyOnTable())
-    inputs.append(players[2].getMoneyOnTable())
-    inputs.append(players[3].getMoneyOnTable())
-    inputs.append(players[4].getMoneyOnTable())
-    inputs.append(players[5].getMoneyOnTable())
-    inputs.append(players[0].getMoney())
-    inputs.append(players[1].getMoney())
-    inputs.append(players[2].getMoney())
-    inputs.append(players[3].getMoney())
-    inputs.append(players[4].getMoney())
-    inputs.append(players[5].getMoney())
+    inputs.append(getMostMoneyOnTable())
+    inputs.append(player.getMoneyOnTable())
+    inputs.append(player.getMoney())
+
+def improveAi():
+
+    mom = None
+    dad = None
+
+    mostMoney = getMostMoneyOnTable()
+    secondMostMoney = getSecondMostMoneyOnTable()
+
+    for player in players:
+        if(player.getMoneyOnTable() == mostMoney):
+            dad = player
+        if(player.getMoneyOnTable() == secondMostMoney):
+            mom = player
+
+    for player in players:
+        if(player.getMoney() <= 0):
+            player.getAi.meiosis(mom.getAi().getWeights(), dad.getAi().getWeights())
+            print(f"{player.getName()} has run out of money and gotten a new set of weights")
 
 
 test()
 
-setup()
 
 #game loop
-for i in range(100):
-    pass
-
-
-for i in range(1):
-    os.system("cls")
+for i in range(10):
+    setup()
+    roundOfBetting()
+    flop()
+    roundOfBetting()
+    turnOrRiver()#turn
+    roundOfBetting()
+    turnOrRiver()#river
+    roundOfBetting()

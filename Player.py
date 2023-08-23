@@ -1,7 +1,8 @@
+from Ai import Ai
 
 class Player:
 
-    def __init__(self, inputname, startingCash, index):
+    def __init__(self, inputname: str, startingCash: int, index: int, ai: Ai):
         self.name = inputname
         self.pocket = list()#the two private cards a player holds
         self.hand = -1#the poker hand, high card = 0, pair = 1....
@@ -9,7 +10,9 @@ class Player:
         self.moneyOnTheTable = 0
         self.__dealerbool = False
         self.isPlaying = True
+        self.hasCalled = False
         self.index = index
+        self.ai = ai
 
     def betMoney(self, amountToBet):
         if ((self.money - amountToBet) >= 0):
@@ -46,7 +49,26 @@ class Player:
     def getPocket(self):
         return self.pocket
 
+    def clearPocket(self):
+        self.pocket = list()
+
     def getIndex(self):
         return self.index
 
+    def getAi(self) -> Ai:
+        return self.ai
 
+    def isPlaying(self):
+        return self.isPlaying
+
+    def setIsPlaying(self, newValue):
+        self.isPlaying = newValue
+
+    def hasCalled(self):
+        return self.hasCalled
+
+    def setHasCalled(self, newInput):
+        self.hasCalled = newInput
+
+    def getName(self):
+        return self.name
