@@ -46,12 +46,11 @@ class Ai:
         #region++++++setting random output weights++++++
         for i in range(self.numOfOutputs):
             weights = []
-
             for p in range(self.sizeOfHiddenLayers):
                 weight.append(round(random.random(), 3))
 
-            self.outputWeights.append(weights)
 
+            self.outputWeights.append(weight)
         #endregion
 
 
@@ -60,7 +59,7 @@ class Ai:
         self.weights.append(self.outputWeights)
 
 
-    def gelu(self, value) -> float:
+    def __gelu(self, value) -> float:
         return 0.5 * value * (1 + math.erf(value/math.sqrt(2)))
 
     #returns a list holding the values of the first hidden layer
@@ -75,7 +74,7 @@ class Ai:
                 holder = inputs[i] * self.inputWeights[o][i]
                 nueronValue += holder
 
-            nueronValue = self.gelu(nueronValue)
+            nueronValue = self.__gelu(nueronValue)
             hiddenNeurons.append(nueronValue)
 
         return hiddenNeurons
@@ -90,7 +89,7 @@ class Ai:
             nueronValue = 0
 
             for o in range(self.sizeOfHiddenLayers):
-                nueronValue += inputs[o] * self.hiddenWeights[endingColumn][o]
+                nueronValue += inputs[o] * self.hiddenWeights[endingColumn][i][o]
 
             nueronValue = self.__gelu(nueronValue)
             hiddenLayer.append(nueronValue)

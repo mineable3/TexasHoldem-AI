@@ -9,7 +9,7 @@ class Player:
         self.money = startingCash
         self.moneyOnTheTable = 0
         self.__dealerbool = False
-        self.isPlaying = True
+        self.__isPlaying = True
         self.hasCalled = False
         self.index = index
         self.ai = ai
@@ -31,7 +31,7 @@ class Player:
     def getMoney(self) -> int:
         return self.money
 
-    def getMoneyOnTable(self):
+    def getMoneyOnTable(self) -> int:
         return self.moneyOnTheTable
 
     def resetMoneyOnTable(self):
@@ -58,8 +58,8 @@ class Player:
     def getAi(self) -> Ai:
         return self.ai
 
-    def isPlaying(self):
-        return self.isPlaying
+    def isPlaying(self) -> bool:
+        return self.__isPlaying
 
     def setIsPlaying(self, newValue):
         self.isPlaying = newValue

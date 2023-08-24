@@ -6,9 +6,9 @@ from Ai import Ai
 import random
 import os
 
+logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
 def test():
-
 
     pass
 
@@ -206,7 +206,7 @@ def roundOfBetting():
             currentBetterIndex = 5
         #endregion
 
-        amountToBet = players[currentBetterIndex].getAi().inputToOutput(getInputs(players[currentBetterIndex]))
+        amountToBet = players[currentBetterIndex].getAi().inputToOutput(getInputs(players[currentBetterIndex]))[0]
         newMoneyOnTable = players[currentBetterIndex].getMoneyOnTable() + amountToBet
 
         if(newMoneyOnTable < getMostMoneyOnTable()):
@@ -330,7 +330,6 @@ def improveAi():
 
 test()
 
-logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
 #game loop
 for i in range(10):
