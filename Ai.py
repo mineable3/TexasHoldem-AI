@@ -130,67 +130,73 @@ class Ai:
 
         #input layer
         for i in range(len(weights[0])):
-            determiningNum = random.randint(-100, 100)
-
-            if(determiningNum > 95):
-                #slightly bigger weight
-                weights[0][i] = weights[0][i] * (1 + Constants.mutator)
-            elif(determiningNum < -95):
-                #slightly smaller weight
-                weights[0][i] = weights[0][i] * (1 - Constants.mutator)
-
-        #hidden layers
-        for i in range(len(weights[1])):
-            for o in range(len(weights[1][i])):
+            for o in range(len(weights[0][i])):
                 determiningNum = random.randint(-100, 100)
 
                 if(determiningNum > 95):
                     #slightly bigger weight
-                    weights[1][i][o] = weights[1][i][o] * (1 + Constants.mutator)
+
+                    weights[0][i][o] = weights[0][i][o] * (1 + Constants.factorOfMutation)
                 elif(determiningNum < -95):
                     #slightly smaller weight
-                    weights[1][i][o] = weights[1][i][o] * (1 - Constants.mutator)
+                    weights[0][i][o] = weights[0][i][o] * (1 - Constants.factorOfMutation)
+
+        #hidden layers
+        for i in range(len(weights[1])):
+            for o in range(len(weights[1][i])):
+                for u in range(len(weights[1][i][o])):
+                    determiningNum = random.randint(-100, 100)
+
+                    if(determiningNum > 95):
+                        #slightly bigger weight
+                        weights[1][i][o][u] = weights[1][i][o][u] * (1 + Constants.factorOfMutation)
+                    elif(determiningNum < -95):
+                        #slightly smaller weight
+                        weights[1][i][o][u] = weights[1][i][o][u] * (1 - Constants.factorOfMutation)
 
         #output layer
         for i in range(len(weights[2])):
-            determiningNum = random.randint(-100, 100)
+            for o in range(len(weights[2][i])):
+                determiningNum = random.randint(-100, 100)
 
-            if(determiningNum > 95):
-                #slightly bigger weight
-                weights[2][i] = weights[2][i] * (1 + Constants.mutator)
-            elif(determiningNum < -95):
-                #slightly smaller weight
-                weights[2][i] = weights[2][i] * (1 - Constants.mutator)
-
+                if(determiningNum > 95):
+                    #slightly bigger weight
+                    weights[2][i][o] = weights[2][i][o] * (1 + Constants.factorOfMutation)
+                elif(determiningNum < -95):
+                    #slightly smaller weight
+                    weights[2][i][o] = weights[2][i][o] * (1 - Constants.factorOfMutation)
 
         return weights
 
     def meiosis(self, mom: list, dad: list):
 
         #input layer
-        for i in range(len(self.weights[0])):
+        for i,value in enumerate(self.weights[0]):
 
             if(random.randint(1, 100) > 50):
-                self.weights[0][i] = mom[0][i]
+                value = mom[0][i]
             else:
-                self.weights[0][i] = dad[0][i]
+                value = dad[0][i]
+            self.weights[0][i] = value
 
         #hidden layers
-        for i in range(len(self.weights[1])):
-            for o in range(len(self.weights[1][i])):
+        for i,array in enumerate(self.weights[1]):
+            for o,value in enumerate(array):
 
                 if(random.randint(1, 100) > 50):
-                    self.weights[1][i][o] = mom[1][i][o]
+                    value = mom[1][i][o]
                 else:
-                    self.weights[1][i][o] = dad[1][i][o]
+                    value = dad[1][i][o]
+                self.weights[1][i][o] = value
 
         #output layer
-        for i in range(len(self.weights[2])):
+        for i,value in enumerate(self.weights[2]):
 
             if(random.randint(1, 100) > 50):
-                self.weights[2][i] = mom[2][i]
+                value = mom[2][i]
             else:
-                self.weights[2][i] = dad[2][i]
+                value = dad[2][i]
+            self.weights[2][i] = value
 
         self.weights = self.__mutateWeights(self.weights)
 
@@ -198,3 +204,6 @@ class Ai:
 
     def getWeights(self):
         return self.weights
+
+
+

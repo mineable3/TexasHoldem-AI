@@ -4,7 +4,7 @@ class Constants:
 
 
     #AI
-    mutator = .015
+    factorOfMutation = .015
 
     #game
     startingCash = 500

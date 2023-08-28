@@ -10,7 +10,7 @@ class Player:
         self.moneyOnTheTable = 0
         self.__dealerbool = False
         self.__isPlaying = True
-        self.hasCalled = False
+        self.__hasCalled = False
         self.index = index
         self.ai = ai
 
@@ -62,13 +62,13 @@ class Player:
         return self.__isPlaying
 
     def setIsPlaying(self, newValue):
-        self.isPlaying = newValue
+        self.__isPlaying = newValue
 
     def hasCalled(self):
-        return self.hasCalled
+        return self.__hasCalled
 
     def setHasCalled(self, newInput):
-        self.hasCalled = newInput
+        self.__hasCalled = newInput
 
     def getName(self):
         return self.name
