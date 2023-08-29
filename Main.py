@@ -346,10 +346,13 @@ def getBestPlayer():
     return dad
 
 def findHand(player: Player):
+    #==============================will look at the first available card and compare to its selfto have a straight flush every time=============
+
+
     hand = -1
     cards = list()
 
-    availableCards = list()
+    availableCards = [Card]
     availableCards.append(player.getPocket()[0])
     availableCards.append(player.getPocket()[1])
     availableCards.append(board[0])
@@ -359,11 +362,44 @@ def findHand(player: Player):
     availableCards.append(board[4])
 
     #high card
+    highestCard = Card(-2,-2)
+    for card in availableCards:
+        if(card.getValue() > highestCard.getValue()):
+            highestCard = card
+            hand = 0
+
     #pair
+    for card in availableCards:
+        for secondCard in availableCards:
+            if(card.getValue() == secondCard.getValue()):
+                hand = 1
+                cards.append(card)
+                cards.append(secondCard)
+
     #two pair
+    if (hand == 1):
+        for card in availableCards:
+            for secondCard in availableCards:
+                if((card.getValue() == secondCard.getValue()) and (card != cards[0] and card != cards[1])):
+                    hand = 2
+                    cards.append(card)
+                    cards.append(secondCard)
+
     #three of a kind
+    for card in availableCards:
+        for secondCard in availableCards:
+            for thirdCard in availableCards:
+                if(card.getValue() == secondCard.getValue() and secondCard.getValue() == thirdCard.getValue()):
+                    hand = 3
+                    cards = cards.clear()
+                    cards.append(card)
+                    cards.append(secondCard)
+                    cards.append(thirdCard)
+
     #straight
     #flush
+    for card in availableCards:
+        pass
     #full house
     #four of a kind
     #straight flush
