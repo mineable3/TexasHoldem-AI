@@ -345,8 +345,10 @@ def getBestPlayer():
 
     return dad
 
+
+
+#==============================will look at the first available card and compare to its selfto have a straight flush every time=============
 def findHand(player: Player):
-    #==============================will look at the first available card and compare to its selfto have a straight flush every time=============
 
 
     hand = -1
