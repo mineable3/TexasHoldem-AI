@@ -372,20 +372,28 @@ def findHand(player: Player):
 
     #pair
     for card in availableCards:
+        availableCards.remove(card)
+
         for secondCard in availableCards:
             if(card.getValue() == secondCard.getValue()):
                 hand = 1
                 cards.append(card)
                 cards.append(secondCard)
+        
+        availableCards.append(card)
 
     #two pair
     if (hand == 1):
         for card in availableCards:
+            availableCards.remove(card)
+            
             for secondCard in availableCards:
                 if((card.getValue() == secondCard.getValue()) and (card != cards[0] and card != cards[1])):
                     hand = 2
                     cards.append(card)
                     cards.append(secondCard)
+
+            availableCards.append(card)
 
     #three of a kind
     for card in availableCards:
