@@ -363,64 +363,87 @@ def findHand(player: Player):
     availableCards.append(board[3])
     availableCards.append(board[4])
 
-    #high card
-    highestCard = Card(-2,-2)
-    for card in availableCards:
-        if(card.getValue() > highestCard.getValue()):
-            highestCard = card
-            hand = 0
 
-    #pair
+    
+
+    #straight
+    #flush
+    #full house
+    #four of a kind
+    #straight flush
+    #royal flush
+
+
+
+
+#region      Finished algorithms
+
+    #three of a kind 3
+    for card in availableCards:
+        availableCards.remove(card)
+        for secondCard in availableCards:
+            availableCards.remove(secondCard)
+            for thirdCard in availableCards:
+
+                if(card.getValue() == secondCard.getValue() and secondCard.getValue() == thirdCard.getValue()):
+                    cards = cards.clear()
+                    cards.append(card)
+                    cards.append(secondCard)
+                    cards.append(thirdCard)
+                    return (3, cards)
+
+            availableCards.append(secondCard)
+        availableCards.append(card)
+
+
+    #two pair 2
+    for card in availableCards:
+        availableCards.remove(card)
+        for secondCard in availableCards:
+            availableCards.remove(secondCard)
+            for thirdCard in availableCards:
+                availableCards.remove(thirdCard)
+                for fourthCard in availableCards:
+
+                    if((card.getValue() == secondCard.getValue()) and (thirdCard.getValue() == fourthCard.getValue())):
+                        cards.append(card)
+                        cards.append(secondCard)
+                        cards.append(thirdCard)
+                        cards.append(fourthCard)
+                        return (2, cards)
+
+                availableCards.append(thirdCard)
+            availableCards.append(secondCard)
+        availableCards.append(card)
+
+
+
+    #pair 1
     for card in availableCards:
         availableCards.remove(card)
 
         for secondCard in availableCards:
             if(card.getValue() == secondCard.getValue()):
-                hand = 1
                 cards.append(card)
                 cards.append(secondCard)
-        
+                return (1, cards)
         availableCards.append(card)
 
-    #two pair
-    if (hand == 1):
-        for card in availableCards:
-            availableCards.remove(card)
-            
-            for secondCard in availableCards:
-                if((card.getValue() == secondCard.getValue()) and (card != cards[0] and card != cards[1])):
-                    hand = 2
-                    cards.append(card)
-                    cards.append(secondCard)
 
-            availableCards.append(card)
 
-    #three of a kind
+    #high card 0
+    highestCard = Card(-2,-2)
     for card in availableCards:
-        for secondCard in availableCards:
-            for thirdCard in availableCards:
-                if(card.getValue() == secondCard.getValue() and secondCard.getValue() == thirdCard.getValue()):
-                    hand = 3
-                    cards = cards.clear()
-                    cards.append(card)
-                    cards.append(secondCard)
-                    cards.append(thirdCard)
+        if(card.getValue() > highestCard.getValue()):
+            highestCard = card
 
-    #straight
-    #flush
-    for card in availableCards:
-        pass
-    #full house
-    #four of a kind
-    #straight flush
-    #royal flush 
+    return (0, highestCard)
+
+#endregion
 
 
 
 
-
-
-    return hand, cards
 
 
 
