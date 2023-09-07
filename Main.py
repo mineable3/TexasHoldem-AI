@@ -364,14 +364,33 @@ def findHand(player: Player):
     availableCards.append(board[4])
 
 
-    
 
-    #straight
-    #flush
-    #full house
-    #four of a kind
-    #straight flush
-    #royal flush
+
+    #straight 4
+    #flush 5
+    
+    #full house 6
+    #four of a kind 7
+    for card in availableCards:
+        availableCards.remove(card)
+        for secondCard in availableCards:
+            availableCards.remove(secondCard)
+            for thirdCard in availableCards:
+                availableCards.remove(thirdCard)
+                for fourthCard in availableCards:
+
+                    if((card.getValue() == secondCard.getValue()) and (secondCard.getValue() == thirdCard.getValue()) and (thirdCard.getValue() == fourthCard.getValue())):
+                        cards.append(card)
+                        cards.append(secondCard)
+                        cards.append(thirdCard)
+                        cards.append(fourthCard)
+                        return (7, cards)
+
+                availableCards.append(thirdCard)
+            availableCards.append(secondCard)
+        availableCards.append(card)
+    #straight flush 8
+    #royal flush 9
 
 
 
