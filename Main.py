@@ -383,7 +383,7 @@ def findHand(player: Player):
                             cards.append(thirdCard)
                             cards.append(fourthCard)
                             cards.append(fifthCard)
-                            return (6, cards)
+                            return (4, cards)
 
                     availableCards.append(fourthCard)
                 availableCards.append(thirdCard)
@@ -408,7 +408,7 @@ def findHand(player: Player):
                             cards.append(thirdCard)
                             cards.append(fourthCard)
                             cards.append(fifthCard)
-                            return (6, cards)
+                            return (5, cards)
 
                     availableCards.append(fourthCard)
                 availableCards.append(thirdCard)
@@ -417,7 +417,28 @@ def findHand(player: Player):
 
 
     #full house 6
-    
+    for card in availableCards:
+        availableCards.remove(card)
+        for secondCard in availableCards:
+            availableCards.remove(secondCard)
+            for thirdCard in availableCards:
+                availableCards.remove(thirdCard)
+                for fourthCard in availableCards:
+                    availableCards.remove(fourthCard)
+                    for fifthCard in availableCards:
+
+                        if((card.getValue() == secondCard.getValue()) and (secondCard.getValue() == thirdCard.getValue()) and (fourthCard.getValue() == fifthCard.getValue())):
+                            cards.append(card)
+                            cards.append(secondCard)
+                            cards.append(thirdCard)
+                            cards.append(fourthCard)
+                            cards.append(fifthCard)
+                            return (6, cards)
+
+                    availableCards.append(fourthCard)
+                availableCards.append(thirdCard)
+            availableCards.append(secondCard)
+        availableCards.append(card)
 
 
     #four of a kind 7
@@ -439,13 +460,46 @@ def findHand(player: Player):
                 availableCards.append(thirdCard)
             availableCards.append(secondCard)
         availableCards.append(card)
-    #straight flush 8
-    #royal flush 9
+
+
+
+    #straight flush 8 and royal flush 9
+    for card in availableCards:
+        availableCards.remove(card)
+        for secondCard in availableCards:
+            availableCards.remove(secondCard)
+            for thirdCard in availableCards:
+                availableCards.remove(thirdCard)
+                for fourthCard in availableCards:
+                    availableCards.remove(fourthCard)
+                    for fifthCard in availableCards:
+
+                        #if the hand is a straight
+                        if((card.getValue() == secondCard.getValue() + 1) and (secondCard.getValue() == thirdCard.getValue() + 1) and (thirdCard.getValue() == fourthCard.getValue() + 1) and (fourthCard.getValue() == fifthCard.getValue()) + 1):
+
+                            #if the hand if a flush
+                            if((card.getSuit() == secondCard.getSuit()) and (secondCard.getSuit() == thirdCard.getSuit()) and (thirdCard.getSuit() == fourthCard.getSuit()) and (fourthCard.getSuit() == fifthCard.getSuit())):
+                                cards.append(card)
+                                cards.append(secondCard)
+                                cards.append(thirdCard)
+                                cards.append(fourthCard)
+                                cards.append(fifthCard)
+
+                                if(card.getValue() == 14):#if the start of the straight is an ace then it's a royal flush
+                                    return (9, cards)
+                                return (8, cards)
+
+                    availableCards.append(fourthCard)
+                availableCards.append(thirdCard)
+            availableCards.append(secondCard)
+        availableCards.append(card)
 
 
 
 
 #region      Finished algorithms
+
+
 
     #three of a kind 3
     for card in availableCards:
