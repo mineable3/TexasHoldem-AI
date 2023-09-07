@@ -366,102 +366,25 @@ def findHand(player: Player):
 
 
 
-    #straight 4
-    for card in availableCards:
-        availableCards.remove(card)
-        for secondCard in availableCards:
-            availableCards.remove(secondCard)
-            for thirdCard in availableCards:
-                availableCards.remove(thirdCard)
-                for fourthCard in availableCards:
-                    availableCards.remove(fourthCard)
-                    for fifthCard in availableCards:
-
-                        if((card.getValue() == secondCard.getValue() + 1) and (secondCard.getValue() == thirdCard.getValue() + 1) and (thirdCard.getValue() == fourthCard.getValue() + 1) and (fourthCard.getValue() == fifthCard.getValue()) + 1):
-                            cards.append(card)
-                            cards.append(secondCard)
-                            cards.append(thirdCard)
-                            cards.append(fourthCard)
-                            cards.append(fifthCard)
-                            return (4, cards)
-
-                    availableCards.append(fourthCard)
-                availableCards.append(thirdCard)
-            availableCards.append(secondCard)
-        availableCards.append(card)
+    
 
 
-    #flush 5
-    for card in availableCards:
-        availableCards.remove(card)
-        for secondCard in availableCards:
-            availableCards.remove(secondCard)
-            for thirdCard in availableCards:
-                availableCards.remove(thirdCard)
-                for fourthCard in availableCards:
-                    availableCards.remove(fourthCard)
-                    for fifthCard in availableCards:
-
-                        if((card.getSuit() == secondCard.getSuit()) and (secondCard.getSuit() == thirdCard.getSuit()) and (thirdCard.getSuit() == fourthCard.getSuit()) and (fourthCard.getSuit() == fifthCard.getSuit())):
-                            cards.append(card)
-                            cards.append(secondCard)
-                            cards.append(thirdCard)
-                            cards.append(fourthCard)
-                            cards.append(fifthCard)
-                            return (5, cards)
-
-                    availableCards.append(fourthCard)
-                availableCards.append(thirdCard)
-            availableCards.append(secondCard)
-        availableCards.append(card)
+    
 
 
-    #full house 6
-    for card in availableCards:
-        availableCards.remove(card)
-        for secondCard in availableCards:
-            availableCards.remove(secondCard)
-            for thirdCard in availableCards:
-                availableCards.remove(thirdCard)
-                for fourthCard in availableCards:
-                    availableCards.remove(fourthCard)
-                    for fifthCard in availableCards:
-
-                        if((card.getValue() == secondCard.getValue()) and (secondCard.getValue() == thirdCard.getValue()) and (fourthCard.getValue() == fifthCard.getValue())):
-                            cards.append(card)
-                            cards.append(secondCard)
-                            cards.append(thirdCard)
-                            cards.append(fourthCard)
-                            cards.append(fifthCard)
-                            return (6, cards)
-
-                    availableCards.append(fourthCard)
-                availableCards.append(thirdCard)
-            availableCards.append(secondCard)
-        availableCards.append(card)
+    
 
 
-    #four of a kind 7
-    for card in availableCards:
-        availableCards.remove(card)
-        for secondCard in availableCards:
-            availableCards.remove(secondCard)
-            for thirdCard in availableCards:
-                availableCards.remove(thirdCard)
-                for fourthCard in availableCards:
-
-                    if((card.getValue() == secondCard.getValue()) and (secondCard.getValue() == thirdCard.getValue()) and (thirdCard.getValue() == fourthCard.getValue())):
-                        cards.append(card)
-                        cards.append(secondCard)
-                        cards.append(thirdCard)
-                        cards.append(fourthCard)
-                        return (7, cards)
-
-                availableCards.append(thirdCard)
-            availableCards.append(secondCard)
-        availableCards.append(card)
+    
 
 
+
+    
+
+
+
+
+#region      Finished algorithms
 
     #straight flush 8 and royal flush 9
     for card in availableCards:
@@ -496,8 +419,103 @@ def findHand(player: Player):
 
 
 
+    #four of a kind 7
+    for card in availableCards:
+        availableCards.remove(card)
+        for secondCard in availableCards:
+            availableCards.remove(secondCard)
+            for thirdCard in availableCards:
+                availableCards.remove(thirdCard)
+                for fourthCard in availableCards:
 
-#region      Finished algorithms
+                    if((card.getValue() == secondCard.getValue()) and (secondCard.getValue() == thirdCard.getValue()) and (thirdCard.getValue() == fourthCard.getValue())):
+                        cards.append(card)
+                        cards.append(secondCard)
+                        cards.append(thirdCard)
+                        cards.append(fourthCard)
+                        return (7, cards)
+
+                availableCards.append(thirdCard)
+            availableCards.append(secondCard)
+        availableCards.append(card)
+
+
+
+    #full house 6
+    for card in availableCards:
+        availableCards.remove(card)
+        for secondCard in availableCards:
+            availableCards.remove(secondCard)
+            for thirdCard in availableCards:
+                availableCards.remove(thirdCard)
+                for fourthCard in availableCards:
+                    availableCards.remove(fourthCard)
+                    for fifthCard in availableCards:
+
+                        if((card.getValue() == secondCard.getValue()) and (secondCard.getValue() == thirdCard.getValue()) and (fourthCard.getValue() == fifthCard.getValue())):
+                            cards.append(card)
+                            cards.append(secondCard)
+                            cards.append(thirdCard)
+                            cards.append(fourthCard)
+                            cards.append(fifthCard)
+                            return (6, cards)
+
+                    availableCards.append(fourthCard)
+                availableCards.append(thirdCard)
+            availableCards.append(secondCard)
+        availableCards.append(card)
+
+
+
+    #flush 5
+    for card in availableCards:
+        availableCards.remove(card)
+        for secondCard in availableCards:
+            availableCards.remove(secondCard)
+            for thirdCard in availableCards:
+                availableCards.remove(thirdCard)
+                for fourthCard in availableCards:
+                    availableCards.remove(fourthCard)
+                    for fifthCard in availableCards:
+
+                        if((card.getSuit() == secondCard.getSuit()) and (secondCard.getSuit() == thirdCard.getSuit()) and (thirdCard.getSuit() == fourthCard.getSuit()) and (fourthCard.getSuit() == fifthCard.getSuit())):
+                            cards.append(card)
+                            cards.append(secondCard)
+                            cards.append(thirdCard)
+                            cards.append(fourthCard)
+                            cards.append(fifthCard)
+                            return (5, cards)
+
+                    availableCards.append(fourthCard)
+                availableCards.append(thirdCard)
+            availableCards.append(secondCard)
+        availableCards.append(card)
+
+
+
+    #straight 4
+    for card in availableCards:
+        availableCards.remove(card)
+        for secondCard in availableCards:
+            availableCards.remove(secondCard)
+            for thirdCard in availableCards:
+                availableCards.remove(thirdCard)
+                for fourthCard in availableCards:
+                    availableCards.remove(fourthCard)
+                    for fifthCard in availableCards:
+
+                        if((card.getValue() == secondCard.getValue() + 1) and (secondCard.getValue() == thirdCard.getValue() + 1) and (thirdCard.getValue() == fourthCard.getValue() + 1) and (fourthCard.getValue() == fifthCard.getValue()) + 1):
+                            cards.append(card)
+                            cards.append(secondCard)
+                            cards.append(thirdCard)
+                            cards.append(fourthCard)
+                            cards.append(fifthCard)
+                            return (4, cards)
+
+                    availableCards.append(fourthCard)
+                availableCards.append(thirdCard)
+            availableCards.append(secondCard)
+        availableCards.append(card)
 
 
 
@@ -517,6 +535,7 @@ def findHand(player: Player):
 
             availableCards.append(secondCard)
         availableCards.append(card)
+
 
 
     #two pair 2
