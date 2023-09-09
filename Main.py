@@ -7,6 +7,7 @@ import random
 import os
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+printEnabled = False
 
 def test():
 
@@ -132,12 +133,14 @@ def flop():
         board.pop(0)
         board.append(deck.pop(0))
 
-    print(f"The community card are {board}")
+    if(printEnabled):
+        print(f"The community cards are {board}")
 
 def turnOrRiver():
     board.pop(0)
     board.append(deck.pop(0))
-    print(f"The community card are {board}")
+    if(printEnabled):
+        print(f"The community cards are {board}")
 
 def dealPocketCards():
     for i in range(len(players)):
@@ -214,7 +217,8 @@ def roundOfBetting():
 
         if(newMoneyOnTable < getMostMoneyOnTable()):
             players[currentBetterIndex].setIsPlaying(False)
-            print(f"{players[currentBetterIndex].getName()} has folded")
+            if(printEnabled):
+                print(f"{players[currentBetterIndex].getName()} has folded")
 
 
 
@@ -228,13 +232,15 @@ def roundOfBetting():
             if(not notAllIn):
                 players[currentBetterIndex].setHasCalled(True)
 
-            print(f"The pot is now at ${pot}")
-            print(f"{players[currentBetterIndex].getName()} has bet ${amountBetted}\n")
+            if(printEnabled):
+                print(f"The pot is now at ${pot}")
+                print(f"{players[currentBetterIndex].getName()} has bet ${amountBetted}\n")
 
         if(bettingIsOver()):
             playing = False
 
-    print("This round of betting is over!")
+    if(printEnabled):
+        print("This round of betting is over!")
 
 def makeEveryonePlaying():
     for player in players:
@@ -297,7 +303,8 @@ def setup():
     dealPocketCards()
     anteAndBlinds()
 
-    print("A new round has started!")
+    if(printEnabled):
+        print("A new round has started!")
 
 def cleanUp():
     makeEveryonePlaying()
@@ -336,7 +343,8 @@ def improveAi():
         if(player.getMoney() <= 0):
             player.getAi().meiosis(mom.getAi().getWeights(), dad.getAi().getWeights())
             player.addMoney(500)
-            print(f"{player.getName()} has run out of money and gotten a new set of weights")
+            if(printEnabled):
+                print(f"{player.getName()} has run out of money and gotten a new set of weights")
 
 def getBestPlayer():
     dad = players[0]
