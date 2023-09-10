@@ -62,6 +62,15 @@ class Ai:
     def __gelu(self, value) -> float:
         return 0.5 * value * (1 + math.erf(value/math.sqrt(2)))
 
+    def __scaleAndRoundList(self, inputList: list, scalingFactor: int):
+
+        output = list()
+
+        for value in inputList:
+            output.append(round(value * scalingFactor, Constants.outputPrecicion))
+
+        return output
+
     #returns a list holding the values of the first hidden layer
     def __inputToFirstHiddenLayer(self, inputs: list):
 
@@ -123,6 +132,8 @@ class Ai:
 
             nueronValue = self.__gelu(nueronValue)
             output.append(nueronValue)
+        
+        output = self.__scaleAndRoundList(output, Constants.outputScaleFactor)
 
         return output
 
