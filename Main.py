@@ -11,8 +11,6 @@ printEnabled = False
 
 def test():
 
-    print(findHand(players[0]))
-
     pass
 
 roboBob = Ai(11, 1, 3, 11)
@@ -269,7 +267,7 @@ def bettingIsOver():
     else:
         return False
 
-def getMostMoneyOnTable():
+def getMostMoneyOnTable() -> int:
 
     mostAmountOfMoneyFromAPlayer = 0
 
@@ -279,7 +277,7 @@ def getMostMoneyOnTable():
 
     return mostAmountOfMoneyFromAPlayer
 
-def getSecondMostMoneyOnTable():
+def getSecondMostMoneyOnTable() -> int:
 
     mostAmountOfMoneyFromAPlayer = 0
 
@@ -312,8 +310,8 @@ def cleanUp():
     clearPlayersHands()
     improveAi()
 
-def getInputs(player: Player):
-    inputs = []
+def getInputs(player: Player) -> list:
+    inputs = list()
     inputs.append(player.getPocket()[0].getValue())
     inputs.append(player.getPocket()[1].getValue())
     inputs.append(board[0].getValue())
@@ -346,7 +344,7 @@ def improveAi():
             if(printEnabled):
                 print(f"{player.getName()} has run out of money and gotten a new set of weights")
 
-def getBestPlayer():
+def getBestPlayer() -> Player:
     dad = players[0]
 
     for player in players:
@@ -355,7 +353,7 @@ def getBestPlayer():
 
     return dad
 
-def findHand(player: Player):
+def findHand(player: Player) -> tuple:
     cards = list()
 
     availableCards = list()
