@@ -7,7 +7,7 @@ import random
 import os
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
-printEnabled = False
+printEnabled = True
 
 def test():
 
@@ -231,8 +231,8 @@ def roundOfBetting():
                 players[currentBetterIndex].setHasCalled(True)
 
             if(printEnabled):
-                print(f"The pot is now at ${pot}")
                 print(f"{players[currentBetterIndex].getName()} has bet ${amountBetted}\n")
+                print(f"The pot is now at ${pot}")
 
         if(bettingIsOver()):
             playing = False
@@ -302,7 +302,7 @@ def setup():
     anteAndBlinds()
 
     if(printEnabled):
-        print("A new round has started!")
+        print("\nA new round has started!")
 
 def cleanUp():
     makeEveryonePlaying()
@@ -383,6 +383,7 @@ def findHand(player: Player) -> tuple:
 
                             #if the hand if a flush
                             if((first.getSuit() == second.getSuit()) and (second.getSuit() == third.getSuit()) and (third.getSuit() == fourth.getSuit()) and (fourth.getSuit() == fifth.getSuit())):
+                                cards = []
                                 cards.append(first)
                                 cards.append(second)
                                 cards.append(third)
@@ -410,6 +411,7 @@ def findHand(player: Player) -> tuple:
                 for fourth in availableCards:
 
                     if((first.getValue() == second.getValue()) and (second.getValue() == third.getValue()) and (third.getValue() == fourth.getValue())):
+                        cards = []
                         cards.append(first)
                         cards.append(second)
                         cards.append(third)
@@ -434,6 +436,7 @@ def findHand(player: Player) -> tuple:
                     for fifth in availableCards:
 
                         if((first.getValue() == second.getValue()) and (second.getValue() == third.getValue()) and (fourth.getValue() == fifth.getValue())):
+                            cards = []
                             cards.append(first)
                             cards.append(second)
                             cards.append(third)
@@ -460,6 +463,7 @@ def findHand(player: Player) -> tuple:
                     for fifth in availableCards:
 
                         if((first.getSuit() == second.getSuit()) and (second.getSuit() == third.getSuit()) and (third.getSuit() == fourth.getSuit()) and (fourth.getSuit() == fifth.getSuit())):
+                            cards = []
                             cards.append(first)
                             cards.append(second)
                             cards.append(third)
@@ -486,6 +490,7 @@ def findHand(player: Player) -> tuple:
                     for fifth in availableCards:
 
                         if((first.getValue() == second.getValue() + 1) and (second.getValue() == third.getValue() + 1) and (third.getValue() == fourth.getValue() + 1) and (fourth.getValue() == fifth.getValue()) + 1):
+                            cards = []
                             cards.append(first)
                             cards.append(second)
                             cards.append(third)
@@ -508,7 +513,7 @@ def findHand(player: Player) -> tuple:
             for third in availableCards:
 
                 if(first.getValue() == second.getValue() and second.getValue() == third.getValue()):
-                    cards = cards.clear()
+                    cards = []
                     cards.append(first)
                     cards.append(second)
                     cards.append(third)
@@ -529,6 +534,7 @@ def findHand(player: Player) -> tuple:
                 for fourth in availableCards:
 
                     if((first.getValue() == second.getValue()) and (third.getValue() == fourth.getValue())):
+                        cards = []
                         cards.append(first)
                         cards.append(second)
                         cards.append(third)
@@ -547,6 +553,7 @@ def findHand(player: Player) -> tuple:
 
         for second in availableCards:
             if(first.getValue() == second.getValue()):
+                cards = []
                 cards.append(first)
                 cards.append(second)
                 return (1, cards)
@@ -564,9 +571,28 @@ def findHand(player: Player) -> tuple:
 
 #endregion
 
+def findWinner() -> Player:
+    winner = players[0]
+    winningHandRank = -1
+    winningCards = [Card(0,0)]
 
+    for player in players:
+        (handRank, cards) = findHand(player)
 
+        if(handRank > winningHandRank):
+            winner = player
+        elif(handRank == winningHandRank and cards[0].getValue()  > winningCards[0].getValue()):
+            winner = player
+        elif(handRank == winningHandRank and cards[0].getValue()  > winningCards[0].getValue() and (random.randint(0,1) > .5)):
+                winner = player
 
+    return winner
+
+def givePotToWinner():
+    global pot
+    winner = findWinner()
+    winner.addMoney(pot)
+    pot = 0
 
 
 
@@ -579,9 +605,8 @@ randomlyChooseDealer()
 
 
 #game loop
-for i in range(1):
+for i in range(2):
     setup()
-    test()
     roundOfBetting()
     flop()
     roundOfBetting()
@@ -589,4 +614,5 @@ for i in range(1):
     roundOfBetting()
     turnOrRiver()#river
     roundOfBetting()
+    givePotToWinner()
     cleanUp()
