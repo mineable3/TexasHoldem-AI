@@ -1,4 +1,5 @@
 import logging
+import time
 from Player import Player
 from Card import Card
 from Constants import Constants
@@ -611,17 +612,24 @@ os.system('cls')
 
 randomlyChooseDealer()
 
+startTime = time.time()
 
 #game loop
-for i in range(10):
-    setup()
-    roundOfBetting()
-    flop()
-    roundOfBetting()
-    turnOrRiver()#turn
-    roundOfBetting()
-    turnOrRiver()#river
-    roundOfBetting()
-    givePotToWinner()
-    cleanUp()
-    
+for i in range(1000):
+    for i in range(10):
+        setup()
+        roundOfBetting()
+        flop()
+        roundOfBetting()
+        turnOrRiver()#turn
+        roundOfBetting()
+        turnOrRiver()#river
+        roundOfBetting()
+        givePotToWinner()
+        cleanUp()
+
+    with open("WeightsDump.txt", "w") as weightDump:
+        weightDump.writelines(str(getBestPlayer().getAi().getWeights()))
+
+    if(time.time() >= startTime + (Constants.timeToTrain * 60)):
+        break
