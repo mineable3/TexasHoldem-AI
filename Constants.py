@@ -5,6 +5,7 @@ class Constants:
 
     #AI
     factorOfMutation = .015
+    precisionOfWeights = 3
 
     #game
     startingCash = 500

@@ -22,7 +22,7 @@ class Ai:
         for i in range(self.numOfInputs):
             weight = []
             for s in range(self.sizeOfHiddenLayers):
-                weight.append(round(random.random(), 3))
+                weight.append(round(random.random(), Constants.precisionOfWeights))
 
             self.inputWeights.append(weight)
         #endregion
@@ -36,7 +36,7 @@ class Ai:
                 weight = []
 
                 for d in range(self.sizeOfHiddenLayers):
-                    weight.append(round(random.random(), 3))
+                    weight.append(round(random.random(), Constants.precisionOfWeights))
 
                 columnWeights.append(weight)
 
@@ -45,9 +45,9 @@ class Ai:
 
         #region++++++setting random output weights++++++
         for i in range(self.numOfOutputs):
-            weights = []
+            weight = []
             for p in range(self.sizeOfHiddenLayers):
-                weight.append(round(random.random(), 3))
+                weight.append(round(random.random(), Constants.precisionOfWeights))
 
 
             self.outputWeights.append(weight)
@@ -136,10 +136,10 @@ class Ai:
                 if(determiningNum > 95):
                     #slightly bigger weight
 
-                    weights[0][i][o] = weights[0][i][o] * (1 + Constants.factorOfMutation)
+                    weights[0][i][o] = round(weights[0][i][o] * (1 + Constants.factorOfMutation), Constants.precisionOfWeights)
                 elif(determiningNum < -95):
                     #slightly smaller weight
-                    weights[0][i][o] = weights[0][i][o] * (1 - Constants.factorOfMutation)
+                    weights[0][i][o] = round(weights[0][i][o] * (1 - Constants.factorOfMutation), Constants.precisionOfWeights)
 
         #hidden layers
         for i in range(len(weights[1])):
@@ -149,10 +149,10 @@ class Ai:
 
                     if(determiningNum > 95):
                         #slightly bigger weight
-                        weights[1][i][o][u] = weights[1][i][o][u] * (1 + Constants.factorOfMutation)
+                        weights[1][i][o][u] = round(weights[1][i][o][u] * (1 + Constants.factorOfMutation), Constants.precisionOfWeights)
                     elif(determiningNum < -95):
                         #slightly smaller weight
-                        weights[1][i][o][u] = weights[1][i][o][u] * (1 - Constants.factorOfMutation)
+                        weights[1][i][o][u] = round(weights[1][i][o][u] * (1 - Constants.factorOfMutation), Constants.precisionOfWeights)
 
         #output layer
         for i in range(len(weights[2])):
@@ -161,10 +161,10 @@ class Ai:
 
                 if(determiningNum > 95):
                     #slightly bigger weight
-                    weights[2][i][o] = weights[2][i][o] * (1 + Constants.factorOfMutation)
+                    weights[2][i][o] = round(weights[2][i][o] * (1 + Constants.factorOfMutation), Constants.precisionOfWeights)
                 elif(determiningNum < -95):
                     #slightly smaller weight
-                    weights[2][i][o] = weights[2][i][o] * (1 - Constants.factorOfMutation)
+                    weights[2][i][o] = round(weights[2][i][o] * (1 - Constants.factorOfMutation), Constants.precisionOfWeights)
 
         return weights
 
