@@ -213,10 +213,10 @@ def roundOfBetting():
         amountToBet = round(amountToBet)
         newMoneyOnTable = players[currentBetterIndex].getMoneyOnTable() + amountToBet
 
-        if(newMoneyOnTable < getMostMoneyOnTable()):
+        if(newMoneyOnTable < getMostMoneyOnTable() and players[currentBetterIndex].isPlaying()):
             players[currentBetterIndex].setIsPlaying(False)
             if(printEnabled):
-                print(f"{players[currentBetterIndex].getName()} has folded")
+                print(f"{players[currentBetterIndex].getName()} has folded \n")
 
 
 
@@ -231,8 +231,8 @@ def roundOfBetting():
                 players[currentBetterIndex].setHasCalled(True)
 
             if(printEnabled):
-                print(f"{players[currentBetterIndex].getName()} has bet ${amountBetted}\n")
-                print(f"The pot is now at ${pot}")
+                print(f"{players[currentBetterIndex].getName()} has bet ${amountBetted}")
+                print(f"The pot is now at ${pot}\n")
 
         if(bettingIsOver()):
             playing = False
@@ -567,32 +567,40 @@ def findHand(player: Player) -> tuple:
         if(first.getValue() > highestCard.getValue()):
             highestCard = first
 
-    return (0, highestCard)
+    return (0, [highestCard])
 
 #endregion
 
-def findWinner() -> Player:
+def findWinner() -> tuple:
     winner = players[0]
     winningHandRank = -1
-    winningCards = [Card(0,0)]
+    winningCards = [holderOne]
 
     for player in players:
         (handRank, cards) = findHand(player)
 
         if(handRank > winningHandRank):
             winner = player
+            winningHandRank = handRank
+            winningCards = cards
         elif(handRank == winningHandRank and cards[0].getValue()  > winningCards[0].getValue()):
             winner = player
+            winningHandRank = handRank
+            winningCards = cards
         elif(handRank == winningHandRank and cards[0].getValue()  > winningCards[0].getValue() and (random.randint(0,1) > .5)):
-                winner = player
+            winner = player
+            winningHandRank = handRank
+            winningCards = cards
 
-    return winner
+    return winner, handRank
 
 def givePotToWinner():
     global pot
-    winner = findWinner()
+    winner, handRank = findWinner()
     winner.addMoney(pot)
     pot = 0
+    if(printEnabled):
+        print(f"\n\n\n\n\n\n{winner.getName()} with a {handRank} and now has ${winner.getMoney()}")
 
 
 
@@ -605,7 +613,7 @@ randomlyChooseDealer()
 
 
 #game loop
-for i in range(2):
+for i in range(10):
     setup()
     roundOfBetting()
     flop()
@@ -616,3 +624,4 @@ for i in range(2):
     roundOfBetting()
     givePotToWinner()
     cleanUp()
+    
