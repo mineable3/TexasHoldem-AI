@@ -580,18 +580,19 @@ def findWinner() -> tuple:
     for player in players:
         (handRank, cards) = findHand(player)
 
-        if(handRank > winningHandRank):
-            winner = player
-            winningHandRank = handRank
-            winningCards = cards
-        elif(handRank == winningHandRank and cards[0].getValue()  > winningCards[0].getValue()):
-            winner = player
-            winningHandRank = handRank
-            winningCards = cards
-        elif(handRank == winningHandRank and cards[0].getValue()  > winningCards[0].getValue() and (random.randint(0,1) > .5)):
-            winner = player
-            winningHandRank = handRank
-            winningCards = cards
+        if(player.isPlaying()):
+            if(handRank > winningHandRank):
+                winner = player
+                winningHandRank = handRank
+                winningCards = cards
+            elif(handRank == winningHandRank and cards[0].getValue() > winningCards[0].getValue()):
+                winner = player
+                winningHandRank = handRank
+                winningCards = cards
+            elif(handRank == winningHandRank and cards[0].getValue() == winningCards[0].getValue() and (random.randint(0,1) > .5)):
+                winner = player
+                winningHandRank = handRank
+                winningCards = cards
 
     return winner, handRank
 
