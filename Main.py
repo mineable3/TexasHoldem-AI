@@ -19,14 +19,14 @@ roboJeff = Ai(11, 1, 3, 11, False)
 roboJim = Ai(11, 1, 3, 11, False)
 roboSally = Ai(11, 1, 3, 11, False)
 roboJoe = Ai(11, 1, 3, 11, False)
-roboHouse = Ai(11, 1, 3, 11, False)
+robotheHouse = Ai(11, 1, 3, 11, False)
 
 bob = Player("bob", Constants.startingCash, 0, roboBob)
 jeff = Player("jeff", Constants.startingCash, 1, roboJeff)
 jim = Player("jim", Constants.startingCash, 2, roboJim)
 sally = Player("sally", Constants.startingCash, 3, roboSally)
 joe = Player("joe", Constants.startingCash, 4, roboJoe)
-house = Player("house", Constants.startingCash, 5, roboHouse)
+theHouse = Player("theHouse", Constants.startingCash, 5, robotheHouse)
 
 
 
@@ -38,7 +38,7 @@ isFirstBettingRound = True
 dealerIndex = -1
 bigBlindIndex = -2
 smallBlindIndex = -3
-players = list([bob, jeff, jim, sally, joe, house])
+players = list([bob, jeff, jim, sally, joe, theHouse])
 
 #region                Making the deck
 
