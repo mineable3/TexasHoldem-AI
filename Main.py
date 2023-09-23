@@ -14,12 +14,12 @@ def test():
 
     pass
 
-roboBob = Ai(11, 1, 3, 11)
-roboJeff = Ai(11, 1, 3, 11)
-roboJim = Ai(11, 1, 3, 11)
-roboSally = Ai(11, 1, 3, 11)
-roboJoe = Ai(11, 1, 3, 11)
-roboHouse = Ai(11, 1, 3, 11)
+roboBob = Ai(11, 1, 3, 11, False)
+roboJeff = Ai(11, 1, 3, 11, False)
+roboJim = Ai(11, 1, 3, 11, False)
+roboSally = Ai(11, 1, 3, 11, False)
+roboJoe = Ai(11, 1, 3, 11, False)
+roboHouse = Ai(11, 1, 3, 11, False)
 
 bob = Player("bob", Constants.startingCash, 0, roboBob)
 jeff = Player("jeff", Constants.startingCash, 1, roboJeff)

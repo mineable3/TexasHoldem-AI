@@ -59,6 +59,15 @@ class Ai:
         self.weights.append(self.outputWeights)
 
 
+    def __init__(self, numOfInputs, numOfOutputs, numOfHiddenLayers, sizeOfHiddenLayers, randomWeights: bool):
+        self.numOfInputs = numOfInputs
+        self.numOfOutputs = numOfOutputs
+        self.numOfHiddenLayers = numOfHiddenLayers
+        self.sizeOfHiddenLayers = sizeOfHiddenLayers
+        if(randomWeights == False):
+            with open("WeightsDump.txt", "r") as weightDump:
+                self.weights = self.__mutateWeights(weightDump.read())
+
     def __gelu(self, value) -> float:
         return 0.5 * value * (1 + math.erf(value/math.sqrt(2)))
 
