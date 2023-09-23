@@ -602,7 +602,7 @@ def givePotToWinner():
     winner.addMoney(pot)
     pot = 0
     if(printEnabled):
-        print(f"\n\n\n\n\n\n{winner.getName()} with a {handRank} and now has ${winner.getMoney()}")
+        print(f"\n\n\n\n\n\n{winner.getName()} won with a {handRank} and now has ${winner.getMoney()}")
 
 
 
