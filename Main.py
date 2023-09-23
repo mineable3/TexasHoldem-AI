@@ -604,6 +604,10 @@ def givePotToWinner():
     if(printEnabled):
         print(f"\n\n\n\n\n\n{winner.getName()} won with a {handRank} and now has ${winner.getMoney()}")
 
+def resetAllPlayersMoney():
+    for player in players:
+        player.addMoney(player.getMoney() * -1)
+        player.addMoney(Constants.startingCash)
 
 
 
@@ -628,6 +632,9 @@ for i in range(1000):
         roundOfBetting()
         givePotToWinner()
         cleanUp()
+    
+    #so inflation doesn't occur
+    resetAllPlayersMoney()
 
     with open("WeightsDump.txt", "w") as weightDump:
         weightDump.writelines(str(getBestPlayer().getAi().getWeights()))
