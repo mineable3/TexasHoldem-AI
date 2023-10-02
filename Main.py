@@ -8,25 +8,28 @@ import random
 import os
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
-printEnabled = True
+printEnabled = False
+randomizeWeights = False
+
+bufferingFrame = 0
 
 def test():
 
     pass
 
-roboBob = Ai(11, 1, 3, 11, False)
-roboJeff = Ai(11, 1, 3, 11, False)
-roboJim = Ai(11, 1, 3, 11, False)
-roboSally = Ai(11, 1, 3, 11, False)
-roboJoe = Ai(11, 1, 3, 11, False)
-robotheHouse = Ai(11, 1, 3, 11, False)
+roboBob = Ai(11, 1, 3, 11, randomizeWeights)
+roboJeff = Ai(11, 1, 3, 11, randomizeWeights)
+roboJim = Ai(11, 1, 3, 11, randomizeWeights)
+roboSally = Ai(11, 1, 3, 11, randomizeWeights)
+roboJoe = Ai(11, 1, 3, 11, randomizeWeights)
+robotheHouse = Ai(11, 1, 3, 11, randomizeWeights)
 
-bob = Player("bob", Constants.startingCash, 0, roboBob)
-jeff = Player("jeff", Constants.startingCash, 1, roboJeff)
-jim = Player("jim", Constants.startingCash, 2, roboJim)
-sally = Player("sally", Constants.startingCash, 3, roboSally)
-joe = Player("joe", Constants.startingCash, 4, roboJoe)
-theHouse = Player("theHouse", Constants.startingCash, 5, robotheHouse)
+bob = Player("Bob", Constants.startingCash, 0, roboBob)
+jeff = Player("Jeff", Constants.startingCash, 1, roboJeff)
+jim = Player("Jim", Constants.startingCash, 2, roboJim)
+sally = Player("Sally", Constants.startingCash, 3, roboSally)
+joe = Player("Joe", Constants.startingCash, 4, roboJoe)
+theHouse = Player("TheHouse", Constants.startingCash, 5, robotheHouse)
 
 
 
@@ -169,7 +172,7 @@ def rotateDealer():
         dealerIndex = 0
     else:
         dealerIndex += 1
-    
+
     if(bigBlindIndex == 5):
         bigBlindIndex = 0
     else:
@@ -181,11 +184,11 @@ def rotateDealer():
         smallBlindIndex += 1
 
 def anteAndBlinds():
-    for i in range(len(players)):
-        betMoney(players[i], Constants.ante)
+  for player in players:
+    betMoney(player, Constants.ante)
 
-    betMoney(players[bigBlindIndex], Constants.bigBlind - Constants.ante)
-    betMoney(players[smallBlindIndex], (Constants.bigBlind / 2) - Constants.ante)
+  betMoney(players[bigBlindIndex], Constants.bigBlind - Constants.ante)
+  betMoney(players[smallBlindIndex], (Constants.bigBlind / 2) - Constants.ante)
 
 def roundOfBetting():
     global dealerIndex
@@ -262,7 +265,7 @@ def bettingIsOver():
     for player in currentBetters:
         if(player.hasCalled()):
             numOfPlayersThatCalled += 1
-    
+
     if(len(currentBetters) == numOfPlayersThatCalled):
         return True
     else:
@@ -341,7 +344,8 @@ def improveAi():
     for player in players:
         if(player.getMoney() <= 0):
             player.getAi().meiosis(mom.getAi().getWeights(), dad.getAi().getWeights())
-            player.addMoney(500)
+            player.resetMoneyOnTable()
+            player.setMoney(500)
             if(printEnabled):
                 print(f"{player.getName()} has run out of money and gotten a new set of weights")
 
@@ -599,8 +603,17 @@ def findWinner() -> tuple:
 def givePotToWinner():
     global pot
     winner, handRank = findWinner()
+
+    for player in players:
+      if(player == winner):
+        with open(f"TableStats/{winner.getName()}Stats.txt", "a") as stats:
+          stats.write(f"{winner.getMoney()},{winner.getMoneyOnTable()},{handRank},1\n")
+      with open(f"TableStats/{player.getName()}Stats.txt", "a") as stats:
+          stats.write(f"{player.getMoney()},{player.getMoneyOnTable()},{findHand(player)[0]},0\n")
+
     winner.addMoney(pot)
     pot = 0
+
     if(printEnabled):
         print(f"\n\n\n\n\n\n{winner.getName()} won with a {handRank} and now has ${winner.getMoney()}")
 
@@ -609,6 +622,27 @@ def resetAllPlayersMoney():
         player.addMoney(player.getMoney() * -1)
         player.addMoney(Constants.startingCash)
 
+def updateBufferingScreen():
+  global bufferingFrame
+  os.system('cls')
+
+  if(bufferingFrame == 0):
+    print("-")
+  if(bufferingFrame == 1):
+    print("\\")
+  if(bufferingFrame == 2):
+    print("|")
+  if(bufferingFrame == 3):
+    print("/")
+
+  bufferingFrame += 1
+  if(bufferingFrame == 4):
+      bufferingFrame = 0
+
+def __clearPlayersStats():
+  for player in players:
+    with open(f"TableStats/{player.getName()}Stats.txt", "w") as stats:
+      stats.write("")
 
 
 
@@ -620,24 +654,26 @@ randomlyChooseDealer()
 startTime = time.time()
 
 #game loop
-for i in range(1000):
-    for i in range(10):
-        setup()
-        roundOfBetting()
-        flop()
-        roundOfBetting()
-        turnOrRiver()#turn
-        roundOfBetting()
-        turnOrRiver()#river
-        roundOfBetting()
-        givePotToWinner()
-        cleanUp()
-    
-    #so inflation doesn't occur
-    resetAllPlayersMoney()
+for i in range(10000):
+  for i in range(100):
+    setup()
+    roundOfBetting()
+    flop()
+    roundOfBetting()
+    turnOrRiver()#turn
+    roundOfBetting()
+    turnOrRiver()#river
+    roundOfBetting()
+    givePotToWinner()
+    cleanUp()
 
-    with open("WeightsDump.txt", "w") as weightDump:
-        weightDump.writelines(str(getBestPlayer().getAi().getWeights()))
 
-    if(time.time() >= startTime + (Constants.timeToTrain * 60)):
-        break
+  #so inflation doesn't occur
+  resetAllPlayersMoney()
+
+  with open("WeightsDump.txt", "w") as weightDump:
+    weightDump.write(str(getBestPlayer().getAi().getWeights()))
+
+  if(time.time() >= startTime + (Constants.timeToTrain * 60)):
+    break
+#__clearPlayersStats()

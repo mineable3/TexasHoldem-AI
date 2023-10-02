@@ -29,7 +29,7 @@ class Player:
         self.money += winnings
 
     def getMoney(self) -> int:
-        return self.money
+        return self.money + self.moneyOnTheTable
 
     def getMoneyOnTable(self) -> int:
         return self.moneyOnTheTable
@@ -72,3 +72,6 @@ class Player:
 
     def getName(self):
         return self.name
+
+    def setMoney(self, input):
+        self.money = input

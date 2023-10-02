@@ -4,7 +4,7 @@ class Constants:
 
 
 #AI=======================================================
-    
+
     #the absolute value percent a weight can mutate by
     factorOfMutation = .015
 
@@ -18,7 +18,7 @@ class Constants:
     outputPrecicion = 0
 
     #time in minutes
-    timeToTrain = .5
+    timeToTrain = 1
 
 #game======================================================
     startingCash = 500
