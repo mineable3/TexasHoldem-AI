@@ -18,7 +18,7 @@ class Constants:
     outputPrecicion = 0
 
     #time in minutes
-    timeToTrain = 1
+    timeToTrain = .5
 
 #game======================================================
     startingCash = 500

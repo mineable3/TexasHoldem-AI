@@ -15,7 +15,7 @@ bufferingFrame = 0
 
 def test():
 
-    pass
+  pass
 
 roboBob = Ai(11, 1, 3, 11, randomizeWeights)
 roboJeff = Ai(11, 1, 3, 11, randomizeWeights)
@@ -245,12 +245,12 @@ def roundOfBetting():
         print("This round of betting is over!")
 
 def makeEveryonePlaying():
-    for player in players:
-        player.setIsPlaying(True)
+  for player in players:
+    player.setIsPlaying(True)
 
 def resetWhoHasCalled():
-    for player in players:
-        player.setHasCalled(False)
+  for player in players:
+    player.setHasCalled(False)
 
 def bettingIsOver():
 
@@ -292,8 +292,8 @@ def getSecondMostMoneyOnTable() -> int:
     return mostAmountOfMoneyFromAPlayer
 
 def clearPlayersHands():
-    for player in players:
-        player.clearPocket()
+  for player in players:
+    player.clearPocket()
 
 def clearTheBoard():
     global board
@@ -404,8 +404,6 @@ def findHand(player: Player) -> tuple:
             availableCards.append(second)
         availableCards.append(first)
 
-
-
     #four of a kind 7
     for first in availableCards:
         availableCards.remove(first)
@@ -426,8 +424,6 @@ def findHand(player: Player) -> tuple:
                 availableCards.append(third)
             availableCards.append(second)
         availableCards.append(first)
-
-
 
     #full house 6
     for first in availableCards:
@@ -454,8 +450,6 @@ def findHand(player: Player) -> tuple:
             availableCards.append(second)
         availableCards.append(first)
 
-
-
     #flush 5
     for first in availableCards:
         availableCards.remove(first)
@@ -480,8 +474,6 @@ def findHand(player: Player) -> tuple:
                 availableCards.append(third)
             availableCards.append(second)
         availableCards.append(first)
-
-
 
     #straight 4
     for first in availableCards:
@@ -508,8 +500,6 @@ def findHand(player: Player) -> tuple:
             availableCards.append(second)
         availableCards.append(first)
 
-
-
     #three of a kind 3
     for first in availableCards:
         availableCards.remove(first)
@@ -526,8 +516,6 @@ def findHand(player: Player) -> tuple:
 
             availableCards.append(second)
         availableCards.append(first)
-
-
 
     #two pair 2
     for first in availableCards:
@@ -550,8 +538,6 @@ def findHand(player: Player) -> tuple:
             availableCards.append(second)
         availableCards.append(first)
 
-
-
     #pair 1
     for first in availableCards:
         availableCards.remove(first)
@@ -563,8 +549,6 @@ def findHand(player: Player) -> tuple:
                 cards.append(second)
                 return (1, cards)
         availableCards.append(first)
-
-
 
     #high first 0
     highestCard = Card(-2,-2)
@@ -600,22 +584,25 @@ def findWinner() -> tuple:
 
     return winner, handRank
 
-def givePotToWinner():
-    global pot
-    winner, handRank = findWinner()
+def givePotToWinner(i: int):
+  global pot
+  winner, handRank = findWinner()
 
-    for player in players:
-      if(player == winner):
-        with open(f"TableStats/{winner.getName()}Stats.txt", "a") as stats:
-          stats.write(f"{winner.getMoney()},{winner.getMoneyOnTable()},{handRank},1\n")
-      with open(f"TableStats/{player.getName()}Stats.txt", "a") as stats:
-          stats.write(f"{player.getMoney()},{player.getMoneyOnTable()},{findHand(player)[0]},0\n")
+  if((i % 10) == 0):
+    if(theHouse == winner):
+      with open("TableStats/theHouseStats.txt", "a") as stats:
+        stats.write(f"{winner.getMoney()},{winner.getMoneyOnTable()},{handRank},1\n")
+    with open("TableStats/theHouseStats.txt", "a") as stats:
+      stats.write(f"{theHouse.getMoney()},{theHouse.getMoneyOnTable()},{findHand(theHouse)[0]},0\n")
 
-    winner.addMoney(pot)
-    pot = 0
+  winner.addMoney(pot)
+  pot = 0
 
-    if(printEnabled):
-        print(f"\n\n\n\n\n\n{winner.getName()} won with a {handRank} and now has ${winner.getMoney()}")
+  for player in players:
+    player.resetMoneyOnTable()
+
+  if(printEnabled):
+      print(f"\n\n\n\n\n\n{winner.getName()} won with a {handRank} and now has ${winner.getMoney()}")
 
 def resetAllPlayersMoney():
     for player in players:
@@ -664,7 +651,7 @@ for i in range(10000):
     roundOfBetting()
     turnOrRiver()#river
     roundOfBetting()
-    givePotToWinner()
+    givePotToWinner(i)
     cleanUp()
 
 
