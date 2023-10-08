@@ -8,8 +8,6 @@ import random
 import os
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
-printEnabled = False
-randomizeWeights = False
 
 bufferingFrame = 0
 
@@ -17,12 +15,12 @@ def test():
 
   pass
 
-roboBob = Ai(11, 1, 3, 11, randomizeWeights)
-roboJeff = Ai(11, 1, 3, 11, randomizeWeights)
-roboJim = Ai(11, 1, 3, 11, randomizeWeights)
-roboSally = Ai(11, 1, 3, 11, randomizeWeights)
-roboJoe = Ai(11, 1, 3, 11, randomizeWeights)
-robotheHouse = Ai(11, 1, 3, 11, randomizeWeights)
+roboBob = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
+roboJeff = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
+roboJim = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
+roboSally = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
+roboJoe = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
+robotheHouse = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
 
 bob = Player("Bob", Constants.STARTING_CASH, 0, roboBob)
 jeff = Player("Jeff", Constants.STARTING_CASH, 1, roboJeff)
@@ -39,7 +37,7 @@ isFirstBettingRound = True
 
 
 dealerIndex = -1
-BIG_BLIND_AMOUNTIndex = -2
+bigBlindIndex = -2
 smallBlindIndex = -3
 players = list([bob, jeff, jim, sally, joe, theHouse])
 
@@ -135,13 +133,13 @@ def flop():
         board.pop(0)
         board.append(deck.pop(0))
 
-    if(printEnabled):
+    if(Constants.PRINT_ENABLED):
         print(f"The community cards are {board}")
 
 def turnOrRiver():
     board.pop(0)
     board.append(deck.pop(0))
-    if(printEnabled):
+    if(Constants.PRINT_ENABLED):
         print(f"The community cards are {board}")
 
 def dealPocketCards():
@@ -152,42 +150,42 @@ def dealPocketCards():
         players[i].addPocketCard(deck.pop(0))
 
 def randomlyChooseDealer():
-    global dealerIndex, BIG_BLIND_AMOUNTIndex, smallBlindIndex
+    global dealerIndex, bigBlindIndex, smallBlindIndex
     dealerIndex = random.randint(0, 5)
 
     if(dealerIndex == 5):
-        BIG_BLIND_AMOUNTIndex = 0
+        bigBlindIndex = 0
     else:
-        BIG_BLIND_AMOUNTIndex = dealerIndex + 1
+        bigBlindIndex = dealerIndex + 1
 
-    if(BIG_BLIND_AMOUNTIndex == 5):
+    if(bigBlindIndex == 5):
         smallBlindIndex = 0
     else:
-        smallBlindIndex = BIG_BLIND_AMOUNTIndex + 1
+        smallBlindIndex = bigBlindIndex + 1
 
 def rotateDealer():
-    global dealerIndex, BIG_BLIND_AMOUNTIndex, smallBlindIndex
+    global dealerIndex, bigBlindIndex, smallBlindIndex
 
     if(dealerIndex == 5):
         dealerIndex = 0
     else:
         dealerIndex += 1
 
-    if(BIG_BLIND_AMOUNTIndex == 5):
-        BIG_BLIND_AMOUNTIndex = 0
+    if(bigBlindIndex == 5):
+        bigBlindIndex = 0
     else:
-        BIG_BLIND_AMOUNTIndex += 1
+        bigBlindIndex += 1
 
     if(smallBlindIndex == 5):
         smallBlindIndex = 0
     else:
         smallBlindIndex += 1
 
-def ANTEAndBlinds():
+def anteAndBlinds():
   for player in players:
     betMoney(player, Constants.ANTE)
 
-  betMoney(players[BIG_BLIND_AMOUNTIndex], Constants.BIG_BLIND_AMOUNT - Constants.ANTE)
+  betMoney(players[bigBlindIndex], Constants.BIG_BLIND_AMOUNT - Constants.ANTE)
   betMoney(players[smallBlindIndex], (Constants.BIG_BLIND_AMOUNT / 2) - Constants.ANTE)
 
 def roundOfBetting():
@@ -219,7 +217,7 @@ def roundOfBetting():
 
         if(newMoneyOnTable < getMostMoneyOnTable() and players[currentBetterIndex].isPlaying()):
             players[currentBetterIndex].setIsPlaying(False)
-            if(printEnabled):
+            if(Constants.PRINT_ENABLED):
                 print(f"{players[currentBetterIndex].getName()} has folded \n")
 
 
@@ -234,14 +232,14 @@ def roundOfBetting():
             if(not notAllIn):
                 players[currentBetterIndex].setHasCalled(True)
 
-            if(printEnabled):
+            if(Constants.PRINT_ENABLED):
                 print(f"{players[currentBetterIndex].getName()} has bet ${amountBetted}")
                 print(f"The pot is now at ${pot}\n")
 
         if(bettingIsOver()):
             playing = False
 
-    if(printEnabled):
+    if(Constants.PRINT_ENABLED):
         print("This round of betting is over!")
 
 def makeEveryonePlaying():
@@ -254,109 +252,109 @@ def resetWhoHasCalled():
 
 def bettingIsOver():
 
-    #finding all the players currently betting
-    currentBetters = list()
-    for player in players:
-        if(player.isPlaying()):
-            currentBetters.append(player)
+  #finding all the players currently betting
+  currentBetters = list()
+  for player in players:
+    if(player.isPlaying()):
+      currentBetters.append(player)
 
 
-    numOfPlayersThatCalled = 0
-    for player in currentBetters:
-        if(player.hasCalled()):
-            numOfPlayersThatCalled += 1
+  numOfPlayersThatCalled = 0
+  for player in currentBetters:
+    if(player.hasCalled()):
+      numOfPlayersThatCalled += 1
 
-    if(len(currentBetters) == numOfPlayersThatCalled):
-        return True
-    else:
-        return False
+  if(len(currentBetters) == numOfPlayersThatCalled):
+    return True
+  else:
+    return False
 
 def getMostMoneyOnTable() -> int:
 
-    mostAmountOfMoneyFromAPlayer = 0
+  mostAmountOfMoneyFromAPlayer = 0
 
-    for player in players:
-        if(player.getMoneyOnTable() > mostAmountOfMoneyFromAPlayer):
-            mostAmountOfMoneyFromAPlayer = player.getMoneyOnTable()
+  for player in players:
+    if(player.getMoneyOnTable() > mostAmountOfMoneyFromAPlayer):
+      mostAmountOfMoneyFromAPlayer = player.getMoneyOnTable()
 
-    return mostAmountOfMoneyFromAPlayer
+  return mostAmountOfMoneyFromAPlayer
 
 def getSecondMostMoneyOnTable() -> int:
 
-    mostAmountOfMoneyFromAPlayer = 0
+  mostAmountOfMoneyFromAPlayer = 0
 
-    for player in players:
-        if((player.getMoneyOnTable() > mostAmountOfMoneyFromAPlayer) and (player.getMoneyOnTable() != getMostMoneyOnTable())):
-            mostAmountOfMoneyFromAPlayer = player.getMoneyOnTable()
+  for player in players:
+    if((player.getMoneyOnTable() > mostAmountOfMoneyFromAPlayer) and (player.getMoneyOnTable() != getMostMoneyOnTable())):
+      mostAmountOfMoneyFromAPlayer = player.getMoneyOnTable()
 
-    return mostAmountOfMoneyFromAPlayer
+  return mostAmountOfMoneyFromAPlayer
 
 def clearPlayersHands():
   for player in players:
     player.clearPocket()
 
 def clearTheBoard():
-    global board
-    board = list((holderOne, holderTwo, holderThree, holderFour, holderFive))
+  global board
+  board = list((holderOne, holderTwo, holderThree, holderFour, holderFive))
 
 def setup():
-    shuffleAndResetDeck()
-    rotateDealer()
-    dealPocketCards()
-    ANTEAndBlinds()
+  shuffleAndResetDeck()
+  rotateDealer()
+  dealPocketCards()
+  anteAndBlinds()
 
-    if(printEnabled):
-        print("\nA new round has started!")
+  if(Constants.PRINT_ENABLED):
+    print("\nA new round has started!")
 
 def cleanUp():
-    makeEveryonePlaying()
-    clearTheBoard()
-    clearPlayersHands()
-    improveAi()
+  makeEveryonePlaying()
+  clearTheBoard()
+  clearPlayersHands()
+  improveAi()
 
 def getInputs(player: Player) -> list:
-    inputs = list()
-    inputs.append(player.getPocket()[0].getValue())
-    inputs.append(player.getPocket()[1].getValue())
-    inputs.append(board[0].getValue())
-    inputs.append(board[1].getValue())
-    inputs.append(board[2].getValue())
-    inputs.append(board[3].getValue())
-    inputs.append(board[4].getValue())
-    inputs.append(pot)
-    inputs.append(getMostMoneyOnTable())
-    inputs.append(player.getMoneyOnTable())
-    inputs.append(player.getMoney())#value 11
+  inputs = list()
+  inputs.append(player.getPocket()[0].getValue())
+  inputs.append(player.getPocket()[1].getValue())
+  inputs.append(board[0].getValue())
+  inputs.append(board[1].getValue())
+  inputs.append(board[2].getValue())
+  inputs.append(board[3].getValue())
+  inputs.append(board[4].getValue())
+  inputs.append(pot)
+  inputs.append(getMostMoneyOnTable())
+  inputs.append(player.getMoneyOnTable())
+  inputs.append(player.getMoney())#value 11
 
-    return inputs
+  return inputs
 
 def improveAi():
 
-    mom = players[0]
-    dad = players[1]
+  mom = players[0]
+  dad = players[1]
 
-    for player in players:
-        if(player.getMoney() > dad.getMoney()):
-            dad = player
-        elif(player.getMoney() > mom.getMoney()):
-            mom = player
+  for player in players:
+    if(player.getMoney() > dad.getMoney()):
+      dad = player
+    elif(player.getMoney() > mom.getMoney()):
+      mom = player
 
-    for player in players:
-        if(player.getMoney() <= 0):
-            player.getAi().meiosis(mom.getAi().getWeights(), dad.getAi().getWeights())
-            player.resetMoneyOnTable()
-            player.setMoney(500)
-            if(printEnabled):
-                print(f"{player.getName()} has run out of money and gotten a new set of weights")
+  for player in players:
+    if(player.getMoney() <= 0):
+      player.getAi().meiosis(mom.getAi().getWeights(), dad.getAi().getWeights())
+      player.resetMoneyOnTable()
+      player.setMoney(Constants.STARTING_CASH)
+      if(Constants.PRINT_ENABLED):
+        print(f"{player.getName()} has run out of money and gotten a new set of weights")
 
 def getBestPlayer() -> Player:
-    dad = players[0]
+  dad = players[0]
 
-    for player in players:
-        if(player.getMoney() > dad.getMoney()):
-            dad = player
+  for player in players:
+    if(player.getMoney() > dad.getMoney()):
+      dad = player
 
-    return dad
+  return dad
 
 def findHand(player: Player) -> tuple:
     cards = list()
@@ -561,34 +559,34 @@ def findHand(player: Player) -> tuple:
 #endregion
 
 def findWinner() -> tuple:
-    winner = players[0]
-    winningHandRank = -1
-    winningCards = [holderOne]
+  winner = players[0]
+  winningHandRank = -1
+  winningCards = [holderOne]
 
-    for player in players:
-        (handRank, cards) = findHand(player)
+  for player in players:
+    (handRank, cards) = findHand(player)
 
-        if(player.isPlaying()):
-            if(handRank > winningHandRank):
-                winner = player
-                winningHandRank = handRank
-                winningCards = cards
-            elif(handRank == winningHandRank and cards[0].getValue() > winningCards[0].getValue()):
-                winner = player
-                winningHandRank = handRank
-                winningCards = cards
-            elif(handRank == winningHandRank and cards[0].getValue() == winningCards[0].getValue() and (random.randint(0,1) > .5)):
-                winner = player
-                winningHandRank = handRank
-                winningCards = cards
+    if(player.isPlaying()):
+      if(handRank > winningHandRank):
+        winner = player
+        winningHandRank = handRank
+        winningCards = cards
+      elif(handRank == winningHandRank and cards[0].getValue() > winningCards[0].getValue()):
+        winner = player
+        winningHandRank = handRank
+        winningCards = cards
+      elif(handRank == winningHandRank and cards[0].getValue() == winningCards[0].getValue() and (random.randint(0,1) > .5)):
+        winner = player
+        winningHandRank = handRank
+        winningCards = cards
 
-    return winner, handRank
+  return winner, handRank
 
 def givePotToWinner(i: int):
   global pot
   winner, handRank = findWinner()
 
-  if((i % 10) == 0):
+  if((i % Constants.RECORDING_ROUND) == 0):
     if(theHouse == winner):
       with open("TableStats/theHouseStats.txt", "a") as stats:
         stats.write(f"{winner.getMoney()},{winner.getMoneyOnTable()},{handRank},1\n")
@@ -601,13 +599,13 @@ def givePotToWinner(i: int):
   for player in players:
     player.resetMoneyOnTable()
 
-  if(printEnabled):
+  if(Constants.PRINT_ENABLED):
       print(f"\n\n\n\n\n\n{winner.getName()} won with a {handRank} and now has ${winner.getMoney()}")
 
 def resetAllPlayersMoney():
-    for player in players:
-        player.addMoney(player.getMoney() * -1)
-        player.addMoney(Constants.STARTING_CASH)
+  for player in players:
+    player.addMoney(player.getMoney() * -1)
+    player.addMoney(Constants.STARTING_CASH)
 
 def updateBufferingScreen():
   global bufferingFrame
@@ -642,7 +640,7 @@ startTime = time.time()
 
 #game loop
 for i in range(10000):
-  for i in range(100):
+  for i in range(Constants.ROUNDS_UNTIL_DEFLATION):
     setup()
     roundOfBetting()
     flop()
