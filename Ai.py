@@ -29,7 +29,7 @@ class Ai:
             for i in range(self.numOfInputs):
                 weight = []
                 for s in range(self.sizeOfHiddenLayers):
-                    weight.append(round(random.random(), Constants.precisionOfWeights))
+                    weight.append(round(random.random(), Constants.PRECISION_OF_WEIGHTS))
 
                 self.inputWeights.append(weight)
             #endregion
@@ -43,7 +43,7 @@ class Ai:
                     weight = []
 
                     for d in range(self.sizeOfHiddenLayers):
-                        weight.append(round(random.random(), Constants.precisionOfWeights))
+                        weight.append(round(random.random(), Constants.PRECISION_OF_WEIGHTS))
 
                     columnWeights.append(weight)
 
@@ -54,7 +54,7 @@ class Ai:
             for i in range(self.numOfOutputs):
                 weight = []
                 for p in range(self.sizeOfHiddenLayers):
-                    weight.append(round(random.random(), Constants.precisionOfWeights))
+                    weight.append(round(random.random(), Constants.PRECISION_OF_WEIGHTS))
 
 
                 self.outputWeights.append(weight)
@@ -75,7 +75,7 @@ class Ai:
         output = list()
 
         for value in inputList:
-            output.append(round(value * scalingFactor, Constants.outputPrecicion))
+            output.append(round(value * scalingFactor, Constants.OUTPUT_PRECISION))
 
         return output
 
@@ -146,7 +146,7 @@ class Ai:
             nueronValue = self.__gelu(nueronValue)
             output.append(nueronValue)
 
-        output = self.__scaleAndRoundList(output, Constants.outputScaleFactor)
+        output = self.__scaleAndRoundList(output, Constants.OUTPUT_SCALE_FACTOR)
 
         return output
 
@@ -160,11 +160,11 @@ class Ai:
                 if(determiningNum > 95):
                     #slightly bigger weight
                     #logging.debug(weights[0][i][o])
-                    weights[0][i][o] = round(weights[0][i][o] * (1 + Constants.factorOfMutation), Constants.precisionOfWeights)
+                    weights[0][i][o] = round(weights[0][i][o] * (1 + Constants.FACTOR_OF_MUTATION), Constants.PRECISION_OF_WEIGHTS)
                 elif(determiningNum < -95):
                     #slightly smaller weight
                     #logging.debug(weights[0][i][o])
-                    weights[0][i][o] = round(weights[0][i][o] * (1 - Constants.factorOfMutation), Constants.precisionOfWeights)
+                    weights[0][i][o] = round(weights[0][i][o] * (1 - Constants.FACTOR_OF_MUTATION), Constants.PRECISION_OF_WEIGHTS)
 
         #hidden layers
         for i in range(len(weights[1])):
@@ -174,10 +174,10 @@ class Ai:
 
                     if(determiningNum > 95):
                         #slightly bigger weight
-                        weights[1][i][o][u] = round(weights[1][i][o][u] * (1 + Constants.factorOfMutation), Constants.precisionOfWeights)
+                        weights[1][i][o][u] = round(weights[1][i][o][u] * (1 + Constants.FACTOR_OF_MUTATION), Constants.PRECISION_OF_WEIGHTS)
                     elif(determiningNum < -95):
                         #slightly smaller weight
-                        weights[1][i][o][u] = round(weights[1][i][o][u] * (1 - Constants.factorOfMutation), Constants.precisionOfWeights)
+                        weights[1][i][o][u] = round(weights[1][i][o][u] * (1 - Constants.FACTOR_OF_MUTATION), Constants.PRECISION_OF_WEIGHTS)
 
         #output layer
         for i in range(len(weights[2])):
@@ -186,10 +186,10 @@ class Ai:
 
                 if(determiningNum > 95):
                     #slightly bigger weight
-                    weights[2][i][o] = round(weights[2][i][o] * (1 + Constants.factorOfMutation), Constants.precisionOfWeights)
+                    weights[2][i][o] = round(weights[2][i][o] * (1 + Constants.FACTOR_OF_MUTATION), Constants.PRECISION_OF_WEIGHTS)
                 elif(determiningNum < -95):
                     #slightly smaller weight
-                    weights[2][i][o] = round(weights[2][i][o] * (1 - Constants.factorOfMutation), Constants.precisionOfWeights)
+                    weights[2][i][o] = round(weights[2][i][o] * (1 - Constants.FACTOR_OF_MUTATION), Constants.PRECISION_OF_WEIGHTS)
 
         return weights
 

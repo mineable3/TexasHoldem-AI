@@ -24,12 +24,12 @@ roboSally = Ai(11, 1, 3, 11, randomizeWeights)
 roboJoe = Ai(11, 1, 3, 11, randomizeWeights)
 robotheHouse = Ai(11, 1, 3, 11, randomizeWeights)
 
-bob = Player("Bob", Constants.startingCash, 0, roboBob)
-jeff = Player("Jeff", Constants.startingCash, 1, roboJeff)
-jim = Player("Jim", Constants.startingCash, 2, roboJim)
-sally = Player("Sally", Constants.startingCash, 3, roboSally)
-joe = Player("Joe", Constants.startingCash, 4, roboJoe)
-theHouse = Player("TheHouse", Constants.startingCash, 5, robotheHouse)
+bob = Player("Bob", Constants.STARTING_CASH, 0, roboBob)
+jeff = Player("Jeff", Constants.STARTING_CASH, 1, roboJeff)
+jim = Player("Jim", Constants.STARTING_CASH, 2, roboJim)
+sally = Player("Sally", Constants.STARTING_CASH, 3, roboSally)
+joe = Player("Joe", Constants.STARTING_CASH, 4, roboJoe)
+theHouse = Player("TheHouse", Constants.STARTING_CASH, 5, robotheHouse)
 
 
 
@@ -39,7 +39,7 @@ isFirstBettingRound = True
 
 
 dealerIndex = -1
-bigBlindIndex = -2
+BIG_BLIND_AMOUNTIndex = -2
 smallBlindIndex = -3
 players = list([bob, jeff, jim, sally, joe, theHouse])
 
@@ -152,43 +152,43 @@ def dealPocketCards():
         players[i].addPocketCard(deck.pop(0))
 
 def randomlyChooseDealer():
-    global dealerIndex, bigBlindIndex, smallBlindIndex
+    global dealerIndex, BIG_BLIND_AMOUNTIndex, smallBlindIndex
     dealerIndex = random.randint(0, 5)
 
     if(dealerIndex == 5):
-        bigBlindIndex = 0
+        BIG_BLIND_AMOUNTIndex = 0
     else:
-        bigBlindIndex = dealerIndex + 1
+        BIG_BLIND_AMOUNTIndex = dealerIndex + 1
 
-    if(bigBlindIndex == 5):
+    if(BIG_BLIND_AMOUNTIndex == 5):
         smallBlindIndex = 0
     else:
-        smallBlindIndex = bigBlindIndex + 1
+        smallBlindIndex = BIG_BLIND_AMOUNTIndex + 1
 
 def rotateDealer():
-    global dealerIndex, bigBlindIndex, smallBlindIndex
+    global dealerIndex, BIG_BLIND_AMOUNTIndex, smallBlindIndex
 
     if(dealerIndex == 5):
         dealerIndex = 0
     else:
         dealerIndex += 1
 
-    if(bigBlindIndex == 5):
-        bigBlindIndex = 0
+    if(BIG_BLIND_AMOUNTIndex == 5):
+        BIG_BLIND_AMOUNTIndex = 0
     else:
-        bigBlindIndex += 1
+        BIG_BLIND_AMOUNTIndex += 1
 
     if(smallBlindIndex == 5):
         smallBlindIndex = 0
     else:
         smallBlindIndex += 1
 
-def anteAndBlinds():
+def ANTEAndBlinds():
   for player in players:
-    betMoney(player, Constants.ante)
+    betMoney(player, Constants.ANTE)
 
-  betMoney(players[bigBlindIndex], Constants.bigBlind - Constants.ante)
-  betMoney(players[smallBlindIndex], (Constants.bigBlind / 2) - Constants.ante)
+  betMoney(players[BIG_BLIND_AMOUNTIndex], Constants.BIG_BLIND_AMOUNT - Constants.ANTE)
+  betMoney(players[smallBlindIndex], (Constants.BIG_BLIND_AMOUNT / 2) - Constants.ANTE)
 
 def roundOfBetting():
     global dealerIndex
@@ -303,7 +303,7 @@ def setup():
     shuffleAndResetDeck()
     rotateDealer()
     dealPocketCards()
-    anteAndBlinds()
+    ANTEAndBlinds()
 
     if(printEnabled):
         print("\nA new round has started!")
@@ -607,7 +607,7 @@ def givePotToWinner(i: int):
 def resetAllPlayersMoney():
     for player in players:
         player.addMoney(player.getMoney() * -1)
-        player.addMoney(Constants.startingCash)
+        player.addMoney(Constants.STARTING_CASH)
 
 def updateBufferingScreen():
   global bufferingFrame
@@ -661,6 +661,6 @@ for i in range(10000):
   with open("WeightsDump.txt", "w") as weightDump:
     weightDump.write(str(getBestPlayer().getAi().getWeights()))
 
-  if(time.time() >= startTime + (Constants.timeToTrain * 60)):
+  if(time.time() >= startTime + (Constants.TIME_TO_TRAIN * 60)):
     break
 #__clearPlayersStats()

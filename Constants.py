@@ -6,21 +6,21 @@ class Constants:
 #AI=======================================================
 
     #the absolute value percent a weight can mutate by
-    factorOfMutation = .015
+    FACTOR_OF_MUTATION = .015
 
     #the number of decimals a weight should have
-    precisionOfWeights = 3
+    PRECISION_OF_WEIGHTS = 3
 
     #a number to make the outputs either bigger or smaller like scientific notation
-    outputScaleFactor = .001
+    OUTPUT_SCALE_FACTOR = .001
 
     #the number of decimals in the ai's output
-    outputPrecicion = 0
+    OUTPUT_PRECISION = 0
 
     #time in minutes
-    timeToTrain = .5
+    TIME_TO_TRAIN = .1
 
 #game======================================================
-    startingCash = 500
-    ante = 10
-    bigBlind = 30
+    STARTING_CASH = 500
+    ANTE = 10
+    BIG_BLIND_AMOUNT = 30
