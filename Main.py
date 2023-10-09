@@ -586,12 +586,11 @@ def givePotToWinner(i: int):
   global pot
   winner, handRank = findWinner()
 
+  winning = 1 if theHouse == winner else 0;
+
   if((i % Constants.RECORDING_ROUND) == 0):
-    if(theHouse == winner):
-      with open("TableStats/theHouseStats.txt", "a") as stats:
-        stats.write(f"{winner.getMoney()},{winner.getMoneyOnTable()},{handRank},1\n")
     with open("TableStats/theHouseStats.txt", "a") as stats:
-      stats.write(f"{theHouse.getMoney()},{theHouse.getMoneyOnTable()},{findHand(theHouse)[0]},0\n")
+      stats.write(f"{theHouse.getMoney()},{theHouse.getMoneyOnTable()},{findHand(theHouse)[0]},{winning}\n")
 
   winner.addMoney(pot)
   pot = 0
@@ -600,7 +599,7 @@ def givePotToWinner(i: int):
     player.resetMoneyOnTable()
 
   if(Constants.PRINT_ENABLED):
-      print(f"\n\n\n\n\n\n{winner.getName()} won with a {handRank} and now has ${winner.getMoney()}")
+    print(f"\n\n\n\n\n\n{winner.getName()} won with a {handRank} and now has ${winner.getMoney()}")
 
 def resetAllPlayersMoney():
   for player in players:
