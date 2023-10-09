@@ -20,7 +20,7 @@ class Constants:
   RANDOMIZE_WEIGHTS = False
 
   #time in minutes
-  TIME_TO_TRAIN = .1
+  TIME_TO_TRAIN = 72
 
 #game======================================================
   STARTING_CASH = 500
