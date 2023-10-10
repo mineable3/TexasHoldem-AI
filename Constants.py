@@ -20,7 +20,7 @@ class Constants:
   RANDOMIZE_WEIGHTS = False
 
   #time in minutes
-  TIME_TO_TRAIN = 72
+  TIME_TO_TRAIN = 420 #7 hours
 
 #game======================================================
   STARTING_CASH = 500
@@ -28,9 +28,9 @@ class Constants:
   BIG_BLIND_AMOUNT = 30
 
   #how many rounds have to pass before everyone's money gets reset to STARTING_CASH
-  ROUNDS_UNTIL_DEFLATION = 100
+  ROUNDS_UNTIL_DEFLATION = 101
 
   #how many rounds have to pass before it records the stats for a round
-  RECORDING_ROUND = 10
+  RECORDING_ROUND = 50
 
   PRINT_ENABLED = False

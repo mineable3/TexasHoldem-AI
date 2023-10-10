@@ -638,7 +638,7 @@ randomlyChooseDealer()
 startTime = time.time()
 
 #game loop
-for i in range(1000000):
+while(True):
   for i in range(Constants.ROUNDS_UNTIL_DEFLATION):
     setup()
     roundOfBetting()
@@ -659,6 +659,7 @@ for i in range(1000000):
     weightDump.write(str(getBestPlayer().getAi().getWeights()))
 
   if(time.time() >= startTime + (Constants.TIME_TO_TRAIN * 60)):
+    print("time of training expired")
     break
 #__clearPlayersStats()
 print("escaped for loop, guess you tried to train for too long")
