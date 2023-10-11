@@ -3,13 +3,34 @@
 class Constants:
 
 
-    #AI
-    factorOfMutation = .015
-    precisionOfWeights = 3
-    outputScaleFactor = .001
-    outputPrecicion = 0
+#AI=======================================================
 
-    #game
-    startingCash = 500
-    ante = 10
-    bigBlind = 30
+  #the absolute value percent a weight can mutate by
+  FACTOR_OF_MUTATION = .015
+
+  #the number of decimals a weight should have
+  PRECISION_OF_WEIGHTS = 3
+
+  #a number to make the outputs either bigger or smaller like scientific notation
+  OUTPUT_SCALE_FACTOR = .001
+
+  #the number of decimals in the ai's output
+  OUTPUT_PRECISION = 0
+
+  RANDOMIZE_WEIGHTS = False
+
+  #time in minutes
+  TIME_TO_TRAIN = 420 #7 hours
+
+#game======================================================
+  STARTING_CASH = 500
+  ANTE = 10
+  BIG_BLIND_AMOUNT = 30
+
+  #how many rounds have to pass before everyone's money gets reset to STARTING_CASH
+  ROUNDS_UNTIL_DEFLATION = 101
+
+  #how many rounds have to pass before it records the stats for a round
+  RECORDING_ROUND = 50
+
+  PRINT_ENABLED = False

@@ -1,4 +1,5 @@
 import logging
+import time
 from Player import Player
 from Card import Card
 from Constants import Constants
@@ -7,25 +8,26 @@ import random
 import os
 
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
-printEnabled = True
+
+bufferingFrame = 0
 
 def test():
 
-    pass
+  pass
 
-roboBob = Ai(11, 1, 3, 11)
-roboJeff = Ai(11, 1, 3, 11)
-roboJim = Ai(11, 1, 3, 11)
-roboSally = Ai(11, 1, 3, 11)
-roboJoe = Ai(11, 1, 3, 11)
-roboHouse = Ai(11, 1, 3, 11)
+roboBob = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
+roboJeff = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
+roboJim = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
+roboSally = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
+roboJoe = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
+robotheHouse = Ai(11, 1, 3, 11, Constants.RANDOMIZE_WEIGHTS)
 
-bob = Player("bob", Constants.startingCash, 0, roboBob)
-jeff = Player("jeff", Constants.startingCash, 1, roboJeff)
-jim = Player("jim", Constants.startingCash, 2, roboJim)
-sally = Player("sally", Constants.startingCash, 3, roboSally)
-joe = Player("joe", Constants.startingCash, 4, roboJoe)
-house = Player("house", Constants.startingCash, 5, roboHouse)
+bob = Player("Bob", Constants.STARTING_CASH, 0, roboBob)
+jeff = Player("Jeff", Constants.STARTING_CASH, 1, roboJeff)
+jim = Player("Jim", Constants.STARTING_CASH, 2, roboJim)
+sally = Player("Sally", Constants.STARTING_CASH, 3, roboSally)
+joe = Player("Joe", Constants.STARTING_CASH, 4, roboJoe)
+theHouse = Player("TheHouse", Constants.STARTING_CASH, 5, robotheHouse)
 
 
 
@@ -37,7 +39,7 @@ isFirstBettingRound = True
 dealerIndex = -1
 bigBlindIndex = -2
 smallBlindIndex = -3
-players = list([bob, jeff, jim, sally, joe, house])
+players = list([bob, jeff, jim, sally, joe, theHouse])
 
 #region                Making the deck
 
@@ -131,13 +133,13 @@ def flop():
         board.pop(0)
         board.append(deck.pop(0))
 
-    if(printEnabled):
+    if(Constants.PRINT_ENABLED):
         print(f"The community cards are {board}")
 
 def turnOrRiver():
     board.pop(0)
     board.append(deck.pop(0))
-    if(printEnabled):
+    if(Constants.PRINT_ENABLED):
         print(f"The community cards are {board}")
 
 def dealPocketCards():
@@ -168,7 +170,7 @@ def rotateDealer():
         dealerIndex = 0
     else:
         dealerIndex += 1
-    
+
     if(bigBlindIndex == 5):
         bigBlindIndex = 0
     else:
@@ -180,11 +182,11 @@ def rotateDealer():
         smallBlindIndex += 1
 
 def anteAndBlinds():
-    for i in range(len(players)):
-        betMoney(players[i], Constants.ante)
+  for player in players:
+    betMoney(player, Constants.ANTE)
 
-    betMoney(players[bigBlindIndex], Constants.bigBlind - Constants.ante)
-    betMoney(players[smallBlindIndex], (Constants.bigBlind / 2) - Constants.ante)
+  betMoney(players[bigBlindIndex], Constants.BIG_BLIND_AMOUNT - Constants.ANTE)
+  betMoney(players[smallBlindIndex], (Constants.BIG_BLIND_AMOUNT / 2) - Constants.ANTE)
 
 def roundOfBetting():
     global dealerIndex
@@ -215,7 +217,7 @@ def roundOfBetting():
 
         if(newMoneyOnTable < getMostMoneyOnTable() and players[currentBetterIndex].isPlaying()):
             players[currentBetterIndex].setIsPlaying(False)
-            if(printEnabled):
+            if(Constants.PRINT_ENABLED):
                 print(f"{players[currentBetterIndex].getName()} has folded \n")
 
 
@@ -230,128 +232,129 @@ def roundOfBetting():
             if(not notAllIn):
                 players[currentBetterIndex].setHasCalled(True)
 
-            if(printEnabled):
+            if(Constants.PRINT_ENABLED):
                 print(f"{players[currentBetterIndex].getName()} has bet ${amountBetted}")
                 print(f"The pot is now at ${pot}\n")
 
         if(bettingIsOver()):
             playing = False
 
-    if(printEnabled):
+    if(Constants.PRINT_ENABLED):
         print("This round of betting is over!")
 
 def makeEveryonePlaying():
-    for player in players:
-        player.setIsPlaying(True)
+  for player in players:
+    player.setIsPlaying(True)
 
 def resetWhoHasCalled():
-    for player in players:
-        player.setHasCalled(False)
+  for player in players:
+    player.setHasCalled(False)
 
 def bettingIsOver():
 
-    #finding all the players currently betting
-    currentBetters = list()
-    for player in players:
-        if(player.isPlaying()):
-            currentBetters.append(player)
+  #finding all the players currently betting
+  currentBetters = list()
+  for player in players:
+    if(player.isPlaying()):
+      currentBetters.append(player)
 
 
-    numOfPlayersThatCalled = 0
-    for player in currentBetters:
-        if(player.hasCalled()):
-            numOfPlayersThatCalled += 1
-    
-    if(len(currentBetters) == numOfPlayersThatCalled):
-        return True
-    else:
-        return False
+  numOfPlayersThatCalled = 0
+  for player in currentBetters:
+    if(player.hasCalled()):
+      numOfPlayersThatCalled += 1
+
+  if(len(currentBetters) == numOfPlayersThatCalled):
+    return True
+  else:
+    return False
 
 def getMostMoneyOnTable() -> int:
 
-    mostAmountOfMoneyFromAPlayer = 0
+  mostAmountOfMoneyFromAPlayer = 0
 
-    for player in players:
-        if(player.getMoneyOnTable() > mostAmountOfMoneyFromAPlayer):
-            mostAmountOfMoneyFromAPlayer = player.getMoneyOnTable()
+  for player in players:
+    if(player.getMoneyOnTable() > mostAmountOfMoneyFromAPlayer):
+      mostAmountOfMoneyFromAPlayer = player.getMoneyOnTable()
 
-    return mostAmountOfMoneyFromAPlayer
+  return mostAmountOfMoneyFromAPlayer
 
 def getSecondMostMoneyOnTable() -> int:
 
-    mostAmountOfMoneyFromAPlayer = 0
+  mostAmountOfMoneyFromAPlayer = 0
 
-    for player in players:
-        if((player.getMoneyOnTable() > mostAmountOfMoneyFromAPlayer) and (player.getMoneyOnTable() != getMostMoneyOnTable())):
-            mostAmountOfMoneyFromAPlayer = player.getMoneyOnTable()
+  for player in players:
+    if((player.getMoneyOnTable() > mostAmountOfMoneyFromAPlayer) and (player.getMoneyOnTable() != getMostMoneyOnTable())):
+      mostAmountOfMoneyFromAPlayer = player.getMoneyOnTable()
 
-    return mostAmountOfMoneyFromAPlayer
+  return mostAmountOfMoneyFromAPlayer
 
 def clearPlayersHands():
-    for player in players:
-        player.clearPocket()
+  for player in players:
+    player.clearPocket()
 
 def clearTheBoard():
-    global board
-    board = list((holderOne, holderTwo, holderThree, holderFour, holderFive))
+  global board
+  board = list((holderOne, holderTwo, holderThree, holderFour, holderFive))
 
 def setup():
-    shuffleAndResetDeck()
-    rotateDealer()
-    dealPocketCards()
-    anteAndBlinds()
+  shuffleAndResetDeck()
+  rotateDealer()
+  dealPocketCards()
+  anteAndBlinds()
 
-    if(printEnabled):
-        print("\nA new round has started!")
+  if(Constants.PRINT_ENABLED):
+    print("\nA new round has started!")
 
 def cleanUp():
-    makeEveryonePlaying()
-    clearTheBoard()
-    clearPlayersHands()
-    improveAi()
+  makeEveryonePlaying()
+  clearTheBoard()
+  clearPlayersHands()
+  improveAi()
 
 def getInputs(player: Player) -> list:
-    inputs = list()
-    inputs.append(player.getPocket()[0].getValue())
-    inputs.append(player.getPocket()[1].getValue())
-    inputs.append(board[0].getValue())
-    inputs.append(board[1].getValue())
-    inputs.append(board[2].getValue())
-    inputs.append(board[3].getValue())
-    inputs.append(board[4].getValue())
-    inputs.append(pot)
-    inputs.append(getMostMoneyOnTable())
-    inputs.append(player.getMoneyOnTable())
-    inputs.append(player.getMoney())#value 11
+  inputs = list()
+  inputs.append(player.getPocket()[0].getValue())
+  inputs.append(player.getPocket()[1].getValue())
+  inputs.append(board[0].getValue())
+  inputs.append(board[1].getValue())
+  inputs.append(board[2].getValue())
+  inputs.append(board[3].getValue())
+  inputs.append(board[4].getValue())
+  inputs.append(pot)
+  inputs.append(getMostMoneyOnTable())
+  inputs.append(player.getMoneyOnTable())
+  inputs.append(player.getMoney())#value 11
 
-    return inputs
+  return inputs
 
 def improveAi():
 
-    mom = players[0]
-    dad = players[1]
+  mom = players[0]
+  dad = players[1]
 
-    for player in players:
-        if(player.getMoney() > dad.getMoney()):
-            dad = player
-        elif(player.getMoney() > mom.getMoney()):
-            mom = player
+  for player in players:
+    if(player.getMoney() > dad.getMoney()):
+      dad = player
+    elif(player.getMoney() > mom.getMoney()):
+      mom = player
 
-    for player in players:
-        if(player.getMoney() <= 0):
-            player.getAi().meiosis(mom.getAi().getWeights(), dad.getAi().getWeights())
-            player.addMoney(500)
-            if(printEnabled):
-                print(f"{player.getName()} has run out of money and gotten a new set of weights")
+  for player in players:
+    if(player.getMoney() <= 0):
+      player.getAi().meiosis(mom.getAi().getWeights(), dad.getAi().getWeights())
+      player.resetMoneyOnTable()
+      player.setMoney(Constants.STARTING_CASH)
+      if(Constants.PRINT_ENABLED):
+        print(f"{player.getName()} has run out of money and gotten a new set of weights")
 
 def getBestPlayer() -> Player:
-    dad = players[0]
+  dad = players[0]
 
-    for player in players:
-        if(player.getMoney() > dad.getMoney()):
-            dad = player
+  for player in players:
+    if(player.getMoney() > dad.getMoney()):
+      dad = player
 
-    return dad
+  return dad
 
 def findHand(player: Player) -> tuple:
     cards = list()
@@ -399,8 +402,6 @@ def findHand(player: Player) -> tuple:
             availableCards.append(second)
         availableCards.append(first)
 
-
-
     #four of a kind 7
     for first in availableCards:
         availableCards.remove(first)
@@ -421,8 +422,6 @@ def findHand(player: Player) -> tuple:
                 availableCards.append(third)
             availableCards.append(second)
         availableCards.append(first)
-
-
 
     #full house 6
     for first in availableCards:
@@ -449,8 +448,6 @@ def findHand(player: Player) -> tuple:
             availableCards.append(second)
         availableCards.append(first)
 
-
-
     #flush 5
     for first in availableCards:
         availableCards.remove(first)
@@ -475,8 +472,6 @@ def findHand(player: Player) -> tuple:
                 availableCards.append(third)
             availableCards.append(second)
         availableCards.append(first)
-
-
 
     #straight 4
     for first in availableCards:
@@ -503,8 +498,6 @@ def findHand(player: Player) -> tuple:
             availableCards.append(second)
         availableCards.append(first)
 
-
-
     #three of a kind 3
     for first in availableCards:
         availableCards.remove(first)
@@ -521,8 +514,6 @@ def findHand(player: Player) -> tuple:
 
             availableCards.append(second)
         availableCards.append(first)
-
-
 
     #two pair 2
     for first in availableCards:
@@ -545,8 +536,6 @@ def findHand(player: Player) -> tuple:
             availableCards.append(second)
         availableCards.append(first)
 
-
-
     #pair 1
     for first in availableCards:
         availableCards.remove(first)
@@ -559,8 +548,6 @@ def findHand(player: Player) -> tuple:
                 return (1, cards)
         availableCards.append(first)
 
-
-
     #high first 0
     highestCard = Card(-2,-2)
     for first in availableCards:
@@ -572,37 +559,74 @@ def findHand(player: Player) -> tuple:
 #endregion
 
 def findWinner() -> tuple:
-    winner = players[0]
-    winningHandRank = -1
-    winningCards = [holderOne]
+  winner = players[0]
+  winningHandRank = -1
+  winningCards = [holderOne]
 
-    for player in players:
-        (handRank, cards) = findHand(player)
+  for player in players:
+    (handRank, cards) = findHand(player)
 
-        if(handRank > winningHandRank):
-            winner = player
-            winningHandRank = handRank
-            winningCards = cards
-        elif(handRank == winningHandRank and cards[0].getValue()  > winningCards[0].getValue()):
-            winner = player
-            winningHandRank = handRank
-            winningCards = cards
-        elif(handRank == winningHandRank and cards[0].getValue()  > winningCards[0].getValue() and (random.randint(0,1) > .5)):
-            winner = player
-            winningHandRank = handRank
-            winningCards = cards
+    if(player.isPlaying()):
+      if(handRank > winningHandRank):
+        winner = player
+        winningHandRank = handRank
+        winningCards = cards
+      elif(handRank == winningHandRank and cards[0].getValue() > winningCards[0].getValue()):
+        winner = player
+        winningHandRank = handRank
+        winningCards = cards
+      elif(handRank == winningHandRank and cards[0].getValue() == winningCards[0].getValue() and (random.randint(0,1) > .5)):
+        winner = player
+        winningHandRank = handRank
+        winningCards = cards
 
-    return winner, handRank
+  return winner, handRank
 
-def givePotToWinner():
-    global pot
-    winner, handRank = findWinner()
-    winner.addMoney(pot)
-    pot = 0
-    if(printEnabled):
-        print(f"\n\n\n\n\n\n{winner.getName()} with a {handRank} and now has ${winner.getMoney()}")
+def givePotToWinner(i: int):
+  global pot
+  winner, handRank = findWinner()
 
+  winning = 1 if theHouse == winner else 0;
 
+  if((i % Constants.RECORDING_ROUND) == 0):
+    with open("TableStats/theHouseStats.txt", "a") as stats:
+      stats.write(f"{theHouse.getMoney()},{theHouse.getMoneyOnTable()},{findHand(theHouse)[0]},{winning}\n")
+
+  winner.addMoney(pot)
+  pot = 0
+
+  for player in players:
+    player.resetMoneyOnTable()
+
+  if(Constants.PRINT_ENABLED):
+    print(f"\n\n\n\n\n\n{winner.getName()} won with a {handRank} and now has ${winner.getMoney()}")
+
+def resetAllPlayersMoney():
+  for player in players:
+    player.addMoney(player.getMoney() * -1)
+    player.addMoney(Constants.STARTING_CASH)
+
+def updateBufferingScreen():
+  global bufferingFrame
+  os.system('cls')
+
+  if(bufferingFrame == 0):
+    print("-")
+  if(bufferingFrame == 1):
+    print("\\")
+  if(bufferingFrame == 2):
+    print("|")
+  if(bufferingFrame == 3):
+    print("/")
+
+  bufferingFrame += 1
+  if(bufferingFrame == 4):
+      bufferingFrame = 0
+
+def __clearPlayersStats():
+  for player in players:
+    with open(f"TableStats/{player.getName()}Stats.txt", "w") as stats:
+      stats.write("")
 
 
 
@@ -611,9 +635,11 @@ os.system('cls')
 
 randomlyChooseDealer()
 
+startTime = time.time()
 
 #game loop
-for i in range(10):
+while(True):
+  for i in range(Constants.ROUNDS_UNTIL_DEFLATION):
     setup()
     roundOfBetting()
     flop()
@@ -622,6 +648,18 @@ for i in range(10):
     roundOfBetting()
     turnOrRiver()#river
     roundOfBetting()
-    givePotToWinner()
+    givePotToWinner(i)
     cleanUp()
-    
+
+
+  #so inflation doesn't occur
+  resetAllPlayersMoney()
+
+  with open("WeightsDump.txt", "w") as weightDump:
+    weightDump.write(str(getBestPlayer().getAi().getWeights()))
+
+  if(time.time() >= startTime + (Constants.TIME_TO_TRAIN * 60)):
+    print("time of training expired")
+    break
+#__clearPlayersStats()
+print("escaped for loop, guess you tried to train for too long")
