@@ -20,7 +20,7 @@ class Constants:
   RANDOMIZE_WEIGHTS = False
 
   #time in minutes
-  TIME_TO_TRAIN = 420 #7 hours
+  TIME_TO_TRAIN = .1
 
 #game======================================================
   STARTING_CASH = 500
@@ -34,3 +34,5 @@ class Constants:
   RECORDING_ROUND = 50
 
   PRINT_ENABLED = False
+
+  BUFFERING_SCREEN_FPS = 1

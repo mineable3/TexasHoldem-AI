@@ -10,6 +10,7 @@ import os
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
 bufferingFrame = 0
+lastFrameTime = -1
 
 def test():
 
@@ -602,21 +603,27 @@ def resetAllPlayersMoney():
     player.addMoney(player.getMoney() * -1)
     player.addMoney(Constants.STARTING_CASH)
 
-def updateBufferingScreen():
+def updateBufferingScreen(startingTime: float, fps: int):
   global bufferingFrame
-  os.system('cls')
+  global lastFrameTime
 
-  if(bufferingFrame == 0):
-    print("-")
-  if(bufferingFrame == 1):
-    print("\\")
-  if(bufferingFrame == 2):
-    print("|")
-  if(bufferingFrame == 3):
-    print("/")
+  timeElapsed = int(time.time() - startingTime)
 
-  bufferingFrame += 1
-  if(bufferingFrame == 4):
+  if((timeElapsed % fps) == 0 and timeElapsed != lastFrameTime):
+    os.system('cls')
+    lastFrameTime = timeElapsed
+
+    if(bufferingFrame == 0):
+      print("-")
+    if(bufferingFrame == 1):
+      print("\\")
+    if(bufferingFrame == 2):
+      print("|")
+    if(bufferingFrame == 3):
+      print("/")
+
+    bufferingFrame += 1
+    if(bufferingFrame == 4):
       bufferingFrame = 0
 
 def __clearPlayersStats():
@@ -646,6 +653,7 @@ while(True):
     roundOfBetting()
     givePotToWinner(i)
     cleanUp()
+    updateBufferingScreen(startTime, Constants.BUFFERING_SCREEN_FPS)
 
 
   #so inflation doesn't occur
