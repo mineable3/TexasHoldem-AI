@@ -663,6 +663,6 @@ while(True):
     weightDump.write(str(getBestPlayer().getAi().getWeights()))
 
   if(time.time() >= startTime + (Constants.TIME_TO_TRAIN * 60)):
-    print("time of training expired")
+    print("Training finished!")
     break
 #__clearPlayersStats()
