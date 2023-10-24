@@ -6,17 +6,21 @@ class Constants:
 #AI=======================================================
 
   #the absolute value percent a weight can mutate by
-  FACTOR_OF_MUTATION = .015
+  FACTOR_OF_MUTATION = .005
 
   #the number of decimals a weight should have
   PRECISION_OF_WEIGHTS = 3
 
   #a number to make the outputs either bigger or smaller like scientific notation
+  #DON'T CHANGE THIS NUMBER
+  #THE AI HAS BEEN TRAINING WITH IT AND WILL HAVE TO RETRAIN IF IT CHANGES
   OUTPUT_SCALE_FACTOR = .001
 
   #the number of decimals in the ai's output
   OUTPUT_PRECISION = 0
 
+  #DON'T CHANGE THIS BOOLEAN
+  #THIS WOULD ERASE ALL OF THE TRAINING THE AI HAS DONE SO FAR
   RANDOMIZE_WEIGHTS = False
 
   #time in minutes
@@ -35,4 +39,4 @@ class Constants:
 
   PRINT_ENABLED = False
 
-  BUFFERING_SCREEN_FPS = 1
+  BUFFERING_SCREEN_FPS = 0.1
