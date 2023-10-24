@@ -29,12 +29,9 @@ sally = Player("Sally", Constants.STARTING_CASH, 3, roboSally)
 joe = Player("Joe", Constants.STARTING_CASH, 4, roboJoe)
 theHouse = Player("TheHouse", Constants.STARTING_CASH, 5, robotheHouse)
 
-
-
 pot = 0
 
 isFirstBettingRound = True
-
 
 dealerIndex = -1
 bigBlindIndex = -2
@@ -111,7 +108,6 @@ deck = [aceS, twoS, threS, fourS, fiveS, sixS, sevenS, eightS, nineS, tenS, jack
 #endregion
 
 board = list((holderOne, holderTwo, holderThree, holderFour, holderFive)) #the flop, turn, and river
-
 
 def betMoney(player: Player, amount):
     global pot
@@ -662,4 +658,3 @@ while(True):
     print("time of training expired")
     break
 #__clearPlayersStats()
-print("escaped for loop, guess you tried to train for too long")

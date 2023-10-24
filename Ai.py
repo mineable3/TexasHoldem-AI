@@ -3,10 +3,7 @@ from Constants import Constants
 import random
 import math
 
-
 class Ai:
-
-
 
     def __init__(self, numOfInputs, numOfOutputs, numOfHiddenLayers, sizeOfHiddenLayers, randomWeights: bool):
         self.numOfInputs = numOfInputs
@@ -64,8 +61,6 @@ class Ai:
             self.weights.append(self.inputWeights)
             self.weights.append(self.hiddenWeights)
             self.weights.append(self.outputWeights)
-
-
 
     def __gelu(self, value) -> float:
         return 0.5 * value * (1 + math.erf(value/math.sqrt(2)))
