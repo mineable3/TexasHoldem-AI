@@ -9,7 +9,7 @@ class Constants:
   FACTOR_OF_MUTATION = .005
 
   #the number of decimals a weight should have
-  PRECISION_OF_WEIGHTS = 3
+  PRECISION_OF_WEIGHTS = 5
 
   #a number to make the outputs either bigger or smaller like scientific notation
   #DON'T CHANGE THIS NUMBER
@@ -24,7 +24,7 @@ class Constants:
   RANDOMIZE_WEIGHTS = False
 
   #time in minutes
-  TIME_TO_TRAIN = .1
+  TIME_TO_TRAIN = 220
 
 #game======================================================
   STARTING_CASH = 500
@@ -32,10 +32,10 @@ class Constants:
   BIG_BLIND_AMOUNT = 30
 
   #how many rounds have to pass before everyone's money gets reset to STARTING_CASH
-  ROUNDS_UNTIL_DEFLATION = 101
+  ROUNDS_UNTIL_DEFLATION = 1001
 
   #how many rounds have to pass before it records the stats for a round
-  RECORDING_ROUND = 50
+  RECORDING_ROUND = 500
 
   PRINT_ENABLED = False
 

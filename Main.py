@@ -583,10 +583,10 @@ def givePotToWinner(i: int):
   global pot
   winner, handRank = findWinner()
 
-  winning = 1 if theHouse == winner else 0;
+  winning = 1 if theHouse == winner else 0
 
   if((i % Constants.RECORDING_ROUND) == 0):
-    with open("TableStats/theHouseStats2.txt", "a") as stats:
+    with open("TableStats/theHouseStats3(500).txt", "a") as stats:
       stats.write(f"{theHouse.getMoney()},{theHouse.getMoneyOnTable()},{findHand(theHouse)[0]},{winning}\n")
 
   winner.addMoney(pot)
