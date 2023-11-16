@@ -24,7 +24,8 @@ class Constants:
   RANDOMIZE_WEIGHTS = False
 
   #time in minutes
-  TIME_TO_TRAIN = 220
+  TIME_TO_TRAIN = .3
+  IS_TRAINING = True
 
 #game======================================================
   STARTING_CASH = 500
@@ -35,7 +36,7 @@ class Constants:
   ROUNDS_UNTIL_DEFLATION = 1001
 
   #how many rounds have to pass before it records the stats for a round
-  RECORDING_ROUND = 500
+  RECORDING_ROUND = 1
 
   PRINT_ENABLED = False
 
